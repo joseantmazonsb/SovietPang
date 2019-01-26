@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -10,19 +11,17 @@ import com.jfoenix.controls.JFXTextField;
 import controller.Controller;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -66,7 +65,12 @@ public class MainWindow implements Initializable{
 		alert.getDialogPane().getStylesheets().add(getClass().getResource("style/app.css").toExternalForm());
 		alert.showAndWait();
 		controller.setCurrentPlayer(nick.getText());
-		initGame();
+		try {
+			rootPane.setLeft(null);
+			rootPane.setCenter(FXMLLoader.load(getClass().getResource("./fxml/GameWindow.fxml")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML private void handleViewHighscores() {
@@ -94,19 +98,4 @@ public class MainWindow implements Initializable{
 			//TODO iterate file and show records
 		}	
 	}
-	
-	private void initGame() {
-		rootPane.setLeft(null); //Clear left
-		//Create and set canvas on center
-		Canvas canvas = new Canvas(controller.getWindow().getWidth(), controller.getWindow().getHeight());
-		GraphicsContext drawer = canvas.getGraphicsContext2D();
-		rootPane.getStyleClass().clear();
-		rootPane.getStyleClass().add("gameLayout");
-		rootPane.setCenter(canvas);
-		//Add top bar 
-		drawer.drawImage(new Image(getClass().getResource("../resources/trotsky.png").toExternalForm()), 20, 5, 40, 45);
-		//Game logic
-		
-	}
-	
 }

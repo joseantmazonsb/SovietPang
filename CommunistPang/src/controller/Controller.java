@@ -7,6 +7,8 @@ public class Controller {
 	private static Controller uniqueInstance;
 	private Stage window;
 	private String currentPlayer;
+	private int currentScore;
+	private int currentLevel;
 	
 	public static final int DEFAULT_WIDTH = 900;
 	public static final int DEFAULT_HEIGHT = 640;
@@ -20,12 +22,18 @@ public class Controller {
 	
 	public static final int REWARDS_BONUS = 150;
 	
+	//Constructor
+	public Controller() {
+		currentScore = 0;
+		currentLevel = 1;
+	}
+	
 	//Singleton
 	public static Controller getInstance() {
 		if (uniqueInstance == null) uniqueInstance = new Controller();
 		return uniqueInstance;
 	}
-	//Methods
+	//Getters & setters
 	public Stage getWindow() {
 		return window;
 	}
@@ -37,6 +45,25 @@ public class Controller {
 	}
 	public void setCurrentPlayer(String currentPlayer) {
 		this.currentPlayer = currentPlayer;
+	}
+	public int getCurrentScore() {
+		return currentScore;
+	}
+	public void setCurrentScore(int currentScore) {
+		this.currentScore = currentScore;
+	}
+	public int getCurrentLevel() {
+		return currentLevel;
+	}
+	public void setCurrentLevel(int currentLevel) {
+		this.currentLevel = currentLevel;
+	}
+	//Methods
+	public void nextLevel() {
+		currentLevel++;
+	}
+	public void addScore(int score) {
+		currentScore+=score;
 	}
 	
 }

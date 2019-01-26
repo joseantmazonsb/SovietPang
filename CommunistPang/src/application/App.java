@@ -15,7 +15,7 @@ public class App extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			controller = Controller.getInstance();
-			primaryStage.setMaximized(true);
+			primaryStage.setFullScreen(true);
 			primaryStage.setResizable(false);
 			primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../gui/fxml/MainWindow.fxml"))));
 			primaryStage.show();
