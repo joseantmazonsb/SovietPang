@@ -1,0 +1,342 @@
+/* Main layout */
+
+.layout {
+	-fx-background-image: url("../../resources/homeBackground.png");
+	-fx-background-size: cover;   
+}
+
+.gameLayout {
+	-fx-background-image: url("../../resources/gameBackground.jpg");
+	-fx-background-size: cover;   
+}
+
+/* Dialogs */
+
+.dialog-pane {
+    -fx-background-color: #2e0101;
+}
+.dialog-pane .label {
+    -fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-text-fill: white;
+}
+.dialog-pane .button {
+   	-fx-background-color: #f32e2e;
+   	-fx-text-fill: white;
+   	-fx-wrap-text: true;
+   	-fx-effect: dropshadow( three-pass-box, #ed7171, 10.0, 0.0, 0.0, 0.0);
+   	-fx-cursor: hand;
+}
+.dialog-pane .button:hover {
+	-fx-background-color: #ed7171;
+}
+
+/* Common Buttons */
+
+.commonButton {
+	-jfx-rippler-fill: black;
+	-fx-font-family: "Calibri";
+	-fx-background-color: transparent;
+	-fx-font-size: 20px;
+	-fx-text-fill: white;
+}
+
+.commonButton:hover {
+	-fx-background-color: #f32e2e;
+}
+
+.clearButton {
+	-jfx-rippler-fill: black;
+	-fx-font-family: "Calibri";
+	-fx-background-color: transparent;
+	-fx-font-size: 20px;
+	-fx-text-fill: white;
+}
+
+.clearButton:hover {
+	-fx-background-color: #f32e2e;
+}
+
+
+.exitButton {
+	-fx-font-family: "Calibri Light";
+	-fx-font-size: 14px;
+	-fx-text-fill: #f7f5f3;
+}
+
+.exitButton:hover, 
+.exitButton:focused {
+	-fx-background-color: #c6c4c1;
+	-fx-text-fill: black;
+}
+.exitButton:pressed {
+	-fx-text-fill: black;
+}
+
+/* Header text */
+
+.headerText {
+	-fx-font-family: "Segoe UI";
+	-fx-font-size: 32px;
+	-fx-text-fill: #f7f5f3;
+	-fx-font-weight: bold;
+}
+
+.subHeaderText {
+	-fx-font-family: "Calibri Light";
+	-fx-font-size: 24px;
+	-fx-text-fill: #f7f5f3;
+	-fx-font-weight: bold;
+}
+
+/* Body text */
+
+.simpleBodyText {
+	-fx-font-family: "Calibri";
+	-fx-font-size: 18px;
+	-fx-text-fill: #dbdbdb;
+}
+
+.boldBodyText {
+	-fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-text-fill: white;
+	-fx-font-weight: bold;
+	-fx-fill: white;
+}
+
+.italicBodyText {
+	-fx-font-family: "Calibri";
+	-fx-font-size: 18px;
+	-fx-text-fill: #dbdbdb;
+	-fx-font-style: italic;
+}
+
+/* Text Inputs */
+
+.textInput {
+	-fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-text-fill: white;
+}
+
+
+.jfx-check-box {
+    -jfx-checked-color: #009688;
+    -jfx-unchecked-color: white;
+    -fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-text-fill: white;
+}
+
+/* Home */
+
+.titleOfPlaylist {
+	-fx-font-family: "Segoe UI";
+	-fx-font-size: 13px;
+	-fx-fill: white;
+	-fx-text-fill: white;
+	-fx-font-weight: bold;
+}
+.titleOfPlaylist:hover {
+    -fx-fill: #dbdbdb;
+    -fx-text-fill: #dbdbdb;
+}
+
+/* Explore */
+
+.comboBox {
+	-jfx-checked-color: #009688;
+    -jfx-unchecked-color: #f7f5f3;
+	-fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-text-fill: white;
+}
+.combo-box-popup .list-view {
+	-fx-border-color: #494949;
+	-fx-background-color: #494949;
+}
+
+.combo-box .list-cell {
+	-fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-text-fill: white;
+    -fx-background-color: #616161;
+}
+.combo-box .list-cell:selected {
+    -fx-background-color: #009688;
+    -fx-text-fill: white;
+}
+.combo-box .list-cell:hover {
+    -fx-background-color: #00b7a6;
+    -fx-text-fill: white;
+}
+.comboBox .input-line{
+    -fx-background-color: white;
+}
+.comboBox .input-focused-line{
+    -fx-background-color: #009688;
+}
+
+.searchBar {
+    -fx-background-color: #616161 , white , #494949;
+    -fx-prompt-text-fill: #b6b6b6;
+    -fx-text-fill: white;
+    -fx-font-family: "Calibri Light";
+    -fx-font-size: 14px;
+}
+
+.searchBar:focused {
+    -fx-background-color: #f7f5f3 , white , #494949;
+}
+
+.searchButton {
+	-jfx-button-type: RAISED;
+    -fx-background-color: #009688;
+}
+
+.scroll-pane > .viewport {
+	-fx-background-color: #616161;
+	-fx-border-color: transparent;
+}
+
+.scroll-pane {
+	-fx-background-color: #616161;
+	-fx-border-color: transparent;
+}
+
+.scroll-pane .corner {
+    -fx-background-color: #616161;
+    -fx-border-color: #616161;
+}
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+	-fx-background-color: #009688;
+}
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+	-fx-background-color: #4b4b4b;
+}
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow,
+.scroll-bar:horizontal .increment-arrow,
+.scroll-bar:horizontal .decrement-arrow {
+	-fx-background-color: #009688;
+}
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button,
+.scroll-bar:horizontal .increment-button,
+.scroll-bar:horizontal .decrement-button {
+	-fx-background-color: #4b4b4b;
+	-fx-border-color: #4b4b4b;
+}
+
+.listView {
+	-fx-background-color: #616161;
+	-fx-border-color: transparent;
+}
+.listView .jfx-rippler{
+	-jfx-rippler-fill: black;
+}
+.listView .label{
+	-fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-text-fill: white;
+}
+.listView .list-cell {
+	-fx-background-color: #616161;
+	-fx-border-color: transparent;
+}
+.listView .list-cell:hover {
+	-fx-background-color: #494949;
+	-fx-border-color: transparent;
+}
+.listView .list-cell:selected {
+	-fx-background-color: #4a4a4a;
+	-fx-border-color: transparent;
+}
+.listView .corner {
+	-fx-background-color: #616161;
+	-fx-border-color: #616161;
+}
+
+/* Profile */
+
+.applyButton {
+    -fx-background-color: #009688;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-family: "Calibri Light";
+}
+
+.cancelButton {
+	-fx-font-family: "Calibri Light";
+	-fx-font-size: 14px;
+	-fx-text-fill: white;
+	-fx-background-color: #de0404;
+}
+
+.deleteLink {
+	-fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-text-fill: #ed7171;
+	-fx-underline: false;
+}
+
+.deleteLink:hover {
+	-fx-underline: true;
+	-fx-font-weight: bold;
+}
+
+.getPremiumLink {
+	-fx-text-fill: white;
+	-fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-underline: false;
+}
+
+.getPremiumLink:hover {
+	-fx-underline: true;
+	-fx-font-weight: bold;
+}
+
+.errorText {
+	-fx-font-family: "Calibri";
+	-fx-font-size: 14px;
+	-fx-text-fill: #ed7171;
+	-fx-font-weight: bold;
+}
+
+.textField {
+	-fx-font-family: "Calibri";
+	-fx-font-size: 18px;
+	-fx-text-fill: #dbdbdb;
+	-fx-prompt-text-fill: #bfbfbf;
+}
+.textField .input-line{
+    -fx-background-color: white;
+}
+.textField .input-focused-line{
+    -fx-background-color: #f32e2e;
+}
+
+/* Playlists */
+
+.deletePlaylistButton {
+	-fx-background-color: transparent;
+	-fx-font-size: 14px;
+	-fx-text-fill: white;
+}
+
+.deletePlaylistButton:hover {
+	-fx-background-color: #494949;
+}
+
+
+/* Settings */
+
+.nightModeButton {
+	-fx-text-fill: #f7f5f3;
+	-fx-font-size: 14px;
+	-fx-font-family: "Calibri";
+}
