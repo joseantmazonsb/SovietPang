@@ -5,12 +5,12 @@ import javafx.scene.image.Image;
 
 public class Character {
 	//Attributes
-		private float x, y, width, height, vx, vy; //vx and vy are the components of speed of X,Y axis respectively
+		private double x, y, width, height, vx, vy; //vx and vy are the components of speed of X,Y axis respectively
 		private int lp; //Life points
 		private boolean ultiAvailable; //Ultimate skill
 		private Image img;
 		//Constructor
-		public Character(float x, float y, float width, float height, int lp, Image img) {
+		public Character(double x, double y, double width, double height, int lp, Image img) {
 			this.x = x;
 			this.y = y;
 			this.width = width;
@@ -22,40 +22,40 @@ public class Character {
 			vy = Controller.CHARACTER_Y_AXIS_SPEED;
 		}
 		//Getters & setters
-		public float getX() {
+		public double getX() {
 			return x;
 		}
-		public void setX(float x) {
+		public void setX(double x) {
 			this.x = x;
 		}
-		public float getY() {
+		public double getY() {
 			return y;
 		}
-		public void setY(float y) {
+		public void setY(double y) {
 			this.y = y;
 		}
-		public float getWidth() {
+		public double getWidth() {
 			return width;
 		}
-		public void setWidth(float width) {
+		public void setWidth(double width) {
 			this.width = width;
 		}
-		public float getHeight() {
+		public double getHeight() {
 			return height;
 		}
-		public void setHeight(float height) {
+		public void setHeight(double height) {
 			this.height = height;
 		}
-		public float getVx() {
+		public double getVx() {
 			return vx;
 		}
-		public void setVx(float vx) {
+		public void setVx(double vx) {
 			this.vx = vx;
 		}
-		public float getVy() {
+		public double getVy() {
 			return vy;
 		}
-		public void setVy(float vy) {
+		public void setVy(double vy) {
 			this.vy = vy;
 		}
 		public int getLp() {
@@ -77,8 +77,16 @@ public class Character {
 			this.img = img;
 		}
 		//Mehods
-		public void move() {
+		public void moveRight() {
 			x += vx;
+		}
+		public void moveLeft() {
+			x -= vx;
+		}
+		public void moveUp() {
 			y += vy;
+		}
+		public void moveDown() {
+			y -= vy;
 		}
 }

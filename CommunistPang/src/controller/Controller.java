@@ -1,6 +1,10 @@
 package controller;
 
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import model.Character;
+import model.Enemy;
+import model.Projectile;
 
 public class Controller {
 	//Attributes
@@ -13,12 +17,22 @@ public class Controller {
 	public static final int DEFAULT_WIDTH = 900;
 	public static final int DEFAULT_HEIGHT = 640;
 	
-	public static final float ENEMY_X_AXIS_SPEED = 4;
-	public static final float ENEMY_Y_AXIS_SPEED = 6;
-	public static final float CHARACTER_X_AXIS_SPEED = 10;
-	public static final float CHARACTER_Y_AXIS_SPEED = 0;
-	public static final float PROJECTILE_X_AXIS_SPEED = 0;
-	public static final float PROJECTILE_Y_AXIS_SPEED = 30;
+	private static final double CHARACTER_WIDTH = 70;
+	private static final double CHARACTER_HEIGHT = 85;
+	private static final int CHARACTER_LP = 3;
+	public static final double CHARACTER_X_AXIS_SPEED = 30;
+	public static final double CHARACTER_Y_AXIS_SPEED = 0;
+	
+	private static final double ENEMY_WIDTH = 250;
+	private static final double ENEMY_HEIGHT = 265;
+	public static final double ENEMY_X_AXIS_SPEED = 4;
+	public static final double ENEMY_Y_AXIS_SPEED = 6;
+	private static final int ENEMY_LP = 4;
+	
+	private static final double PROJECTILE_WIDTH = 30;
+	private static final double PROJECTILE_HEIGHT = 30;
+	public static final double PROJECTILE_X_AXIS_SPEED = 0;
+	public static final double PROJECTILE_Y_AXIS_SPEED = 30;
 	
 	public static final int REWARDS_BONUS = 150;
 	
@@ -65,8 +79,14 @@ public class Controller {
 	public void addScore(int score) {
 		currentScore+=score;
 	}
-	public Character createCharacter() {
-		return null;
+	public Character createCharacter(double x, double y, Image img) {
+		return new Character(x, y, CHARACTER_WIDTH, CHARACTER_HEIGHT, CHARACTER_LP, img);
 	}
-	
+	public Enemy createEnemy(double x, double y, Image img) {
+		return new Enemy(x, y, ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_LP, img);
+	}
+	public Projectile createProjectile(double x, double y, Image img) {
+		return new Projectile(x, y, PROJECTILE_WIDTH, PROJECTILE_HEIGHT, img);
+		
+	}
 }

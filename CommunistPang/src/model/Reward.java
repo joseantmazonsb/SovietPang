@@ -5,11 +5,11 @@ import javafx.scene.image.Image;
 
 public class Reward {
 	//Attributes
-		private float x, y, width, height;
+		private double x, y, width, height;
 		private int bonus; //Bonus points
 		private Image img;
 		//Constructor
-		public Reward(float x, float y, float width, float height, Image img) {
+		public Reward(double x, double y, double width, double height, Image img) {
 			this.x = x;
 			this.y = y;
 			this.width = width;
@@ -18,28 +18,28 @@ public class Reward {
 			this.img = img;
 		}
 		//Getters & setters
-		public float getX() {
+		public double getX() {
 			return x;
 		}
-		public void setX(float x) {
+		public void setX(double x) {
 			this.x = x;
 		}
-		public float getY() {
+		public double getY() {
 			return y;
 		}
-		public void setY(float y) {
+		public void setY(double y) {
 			this.y = y;
 		}
-		public float getWidth() {
+		public double getWidth() {
 			return width;
 		}
-		public void setWidth(float width) {
+		public void setWidth(double width) {
 			this.width = width;
 		}
-		public float getHeight() {
+		public double getHeight() {
 			return height;
 		}
-		public void setHeight(float height) {
+		public void setHeight(double height) {
 			this.height = height;
 		}
 		public int getBonus() {

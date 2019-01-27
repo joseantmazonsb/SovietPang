@@ -2,6 +2,6 @@ package model;
 
 public interface Collision {
 	
-	public boolean collision(float x1, float y1, float width1, float height1, float x2, float y2, float width2, float height2);
+	public boolean collision(double x1, double y1, double width1, double height1, double x2, double y2, double width2, double height2);
 
 }

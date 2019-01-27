@@ -38,7 +38,6 @@ public class MainWindow implements Initializable{
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
 		rootPane.setOnKeyPressed(e -> {
 			if (e.getCode().equals(KeyCode.ESCAPE)) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -56,6 +55,9 @@ public class MainWindow implements Initializable{
 		recordsList.getStyleClass().add("listView");
 		nick.getStyleClass().add("textField");
 		nick.setPromptText("Introduce tu nombre");
+		nick.setOnAction(e -> {
+			if (!nick.getText().isEmpty()) handleStartGame();
+		});
 		//Bind TextField to start button to only enable button if TextField not empty
 		startButton.disableProperty().bind(Bindings.createBooleanBinding(() -> nick.getText().trim().isEmpty(), nick.textProperty())); //TODO learn about this
 		//Graphic glitch
@@ -72,9 +74,9 @@ public class MainWindow implements Initializable{
 		controller.setCurrentPlayer(nick.getText());
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setHeaderText(null);
-		alert.setTitle("¡A matar revisionistas!");
+		alert.setTitle("¡A purgar contrarrevolucionarios!");
 		alert.setContentText("Utiliza las flechas horizontales para moverte por el mapa y dispara presionando la barra espaciadora. La tecla 'E' "
-				+ "te permitirá matar más trotskos a su debido tiempo ;)");
+				+ "te permitirá eliminar más trotskos a su debido tiempo ;)");
 		alert.initOwner(controller.getWindow());
 		alert.getDialogPane().getStylesheets().add(getClass().getResource("style/app.css").toExternalForm());
 		alert.showAndWait();
