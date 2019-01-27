@@ -46,7 +46,7 @@ public class MainWindow implements Initializable{
 				alert.setTitle("¿Salir?");
 				alert.setContentText("¿Estás seguro de que quieres salir?¿Quién eliminará a los contrarrevolucionarios entonces?");
 				alert.initOwner(controller.getWindow());
-				alert.getDialogPane().getStylesheets().add(getClass().getClassLoader().getResource("style/app.css").toExternalForm());
+				alert.getDialogPane().getStylesheets().add(getClass().getResource("style/app.css").toExternalForm());
 				alert.showAndWait();
 				if (alert.getResult().getButtonData().isDefaultButton()) handleExit();
 			}
