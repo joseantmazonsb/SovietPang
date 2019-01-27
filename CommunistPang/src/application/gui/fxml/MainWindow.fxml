@@ -8,12 +8,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" prefHeight="640.0" prefWidth="980.0" styleClass="layout" stylesheets="@../style/app.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainWindow">
+<BorderPane fx:id="rootPane" prefHeight="640.0" prefWidth="980.0" styleClass="layout" stylesheets="@../style/app.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.gui.MainWindow">
    <left>
       <VBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
          <children>
             <JFXButton fx:id="playButton" onAction="#handlePlay" ripplerFill="BLACK" styleClass="commonButton" text="JUGAR" />
             <JFXButton fx:id="highscoresButton" onAction="#handleViewHighscores" ripplerFill="BLACK" styleClass="commonButton" text="VER RÉCORDS" />
+            <JFXButton onAction="#handleExit" ripplerFill="BLACK" styleClass="commonButton" text="SALIR" />
          </children>
          <padding>
             <Insets left="120.0" right="20.0" top="300.0" />
