@@ -1,3 +1,10 @@
+/* Fonts */
+
+@font-face {
+    font-family: Kalinka;
+    src: url("../../resources/Kalinka.ttf");
+}
+
 /* Main layout */
 
 .layout {
@@ -11,6 +18,7 @@
 }
 
 .topBar {
+	-fx-background-color: black;
 }
 
 /* Dialogs */
@@ -27,7 +35,7 @@
    	-fx-background-color: #f32e2e;
    	-fx-text-fill: white;
    	-fx-wrap-text: true;
-   	-fx-effect: dropshadow( three-pass-box, #ed7171, 10.0, 0.0, 0.0, 0.0);
+   	-fx-effect: dropshadow(three-pass-box, #ed7171, 10.0, 0.0, 0.0, 0.0);
    	-fx-cursor: hand;
 }
 .dialog-pane .button:hover {

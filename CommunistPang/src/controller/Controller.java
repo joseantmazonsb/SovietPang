@@ -65,5 +65,8 @@ public class Controller {
 	public void addScore(int score) {
 		currentScore+=score;
 	}
+	public Character createCharacter() {
+		return null;
+	}
 	
 }

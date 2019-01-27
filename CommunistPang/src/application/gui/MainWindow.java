@@ -1,4 +1,4 @@
-package gui;
+package application.gui;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,12 +15,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -40,6 +38,20 @@ public class MainWindow implements Initializable{
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		rootPane.setOnKeyPressed(e -> {
+			if (e.getCode().equals(KeyCode.ESCAPE)) {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setHeaderText(null);
+				alert.setTitle("¿Salir?");
+				alert.setContentText("¿Estás seguro de que quieres salir?¿Quién eliminará a los contrarrevolucionarios entonces?");
+				alert.initOwner(controller.getWindow());
+				alert.getDialogPane().getStylesheets().add(getClass().getClassLoader().getResource("style/app.css").toExternalForm());
+				alert.showAndWait();
+				if (alert.getResult().getButtonData().isDefaultButton()) handleExit();
+			}
+		});
+		
 		recordsList = new JFXListView<>();
 		recordsList.getStyleClass().add("listView");
 		nick.getStyleClass().add("textField");
@@ -56,6 +68,8 @@ public class MainWindow implements Initializable{
 	}
 	
 	@FXML private void handleStartGame() {
+		System.out.println("Player '" + nick.getText() + "' is now playing.");
+		controller.setCurrentPlayer(nick.getText());
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setHeaderText(null);
 		alert.setTitle("¡A matar revisionistas!");
@@ -64,10 +78,9 @@ public class MainWindow implements Initializable{
 		alert.initOwner(controller.getWindow());
 		alert.getDialogPane().getStylesheets().add(getClass().getResource("style/app.css").toExternalForm());
 		alert.showAndWait();
-		controller.setCurrentPlayer(nick.getText());
 		try {
 			rootPane.setLeft(null);
-			rootPane.setCenter(FXMLLoader.load(getClass().getResource("./fxml/GameWindow.fxml")));
+			rootPane.setCenter(FXMLLoader.load(getClass().getClassLoader().getResource("application/gui/fxml/GameWindow.fxml")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -88,14 +101,13 @@ public class MainWindow implements Initializable{
 			title.getStyleClass().add("simpleBodyText");
 			content.getChildren().addAll(title, recordsList);
 			center.getChildren().add(content);
-			ImageView close = new ImageView(new Image(getClass().getResource("../resources/close_button.png").toExternalForm()));
-			close.setFitWidth(13);
-			close.setFitHeight(13);
-			close.setCursor(Cursor.HAND);
-			close.setOnMouseClicked(e -> ((BorderPane) controller.getWindow().getScene().getRoot()).setCenter(null));
-			center.getChildren().add(close);
 			((BorderPane) controller.getWindow().getScene().getRoot()).setCenter(center);
 			//TODO iterate file and show records
 		}	
+	}
+	
+	@FXML private void handleExit() {
+		System.out.println("Exiting SovietPang...");
+		controller.getWindow().close();
 	}
 }
