@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import model.Character;
@@ -32,7 +34,7 @@ public class Controller {
 	private static final double PROJECTILE_WIDTH = 30;
 	private static final double PROJECTILE_HEIGHT = 30;
 	public static final double PROJECTILE_X_AXIS_SPEED = 0;
-	public static final double PROJECTILE_Y_AXIS_SPEED = 30;
+	public static final double PROJECTILE_Y_AXIS_SPEED = 25;
 	
 	public static final int REWARDS_BONUS = 150;
 	
@@ -85,8 +87,8 @@ public class Controller {
 	public Enemy createEnemy(double x, double y, Image img) {
 		return new Enemy(x, y, ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_LP, img);
 	}
-	public Projectile createProjectile(double x, double y, Image img) {
-		return new Projectile(x, y, PROJECTILE_WIDTH, PROJECTILE_HEIGHT, img);
+	public Projectile createProjectile(double x, double y, List<Image> imgs) {
+		return new Projectile(x, y, PROJECTILE_WIDTH, PROJECTILE_HEIGHT, imgs);
 		
 	}
 }

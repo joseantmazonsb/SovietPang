@@ -1,19 +1,23 @@
 package model;
 
+import java.util.List;
+
 import controller.Controller;
 import javafx.scene.image.Image;
 
 public class Projectile {
 	//Attributes
 	private double x, y, width, height, vx, vy; //vx and vy are the components of speed of X,Y axis respectively
-	private Image img;
+	private int currentImgIndex;
+	private List<Image> imgs;
 	//Constructor
-	public Projectile(double x, double y, double width, double height, Image img) {
+	public Projectile(double x, double y, double width, double height, List<Image> imgs) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.img = img;
+		this.imgs = imgs;
+		currentImgIndex = 0;
 		vx = Controller.PROJECTILE_X_AXIS_SPEED;
 		vy = Controller.PROJECTILE_Y_AXIS_SPEED;
 	}
@@ -54,11 +58,14 @@ public class Projectile {
 	public void setVy(double vy) {
 		this.vy = vy;
 	}
-	public Image getImg() {
-		return img;
+	public Image getCurrentImg() {
+		int aux = currentImgIndex;
+		currentImgIndex++;
+		currentImgIndex %= imgs.size();
+		return imgs.get(aux);
 	}
-	public void setImg(Image img) {
-		this.img = img;
+	public void setImgs(List<Image> imgs) {
+		this.imgs = imgs;
 	}
 	public void move() {
 		y -= vy;
