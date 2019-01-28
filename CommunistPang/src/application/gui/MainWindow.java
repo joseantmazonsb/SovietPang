@@ -42,8 +42,8 @@ public class MainWindow implements Initializable{
 			if (e.getCode().equals(KeyCode.ESCAPE)) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setHeaderText(null);
-				alert.setTitle("¿Salir?");
-				alert.setContentText("¿Estás seguro de que quieres salir?¿Quién eliminará a los contrarrevolucionarios entonces?");
+				alert.setTitle("Quit");
+				alert.setContentText("Are you sure you want to exit SovietPang? Who will terminate the counterrevolutionaries then?");
 				alert.initOwner(controller.getWindow());
 				alert.getDialogPane().getStylesheets().add(getClass().getResource("style/app.css").toExternalForm());
 				alert.showAndWait();
@@ -54,7 +54,6 @@ public class MainWindow implements Initializable{
 		recordsList = new JFXListView<>();
 		recordsList.getStyleClass().add("listView");
 		nick.getStyleClass().add("textField");
-		nick.setPromptText("Introduce tu nombre");
 		nick.setOnAction(e -> {
 			if (!nick.getText().isEmpty()) handleStartGame();
 		});
@@ -71,12 +70,12 @@ public class MainWindow implements Initializable{
 	
 	@FXML private void handleStartGame() {
 		System.out.println("Player '" + nick.getText() + "' is now playing.");
-		controller.setCurrentPlayer(nick.getText());
+		controller.setPlayerName(nick.getText());
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setHeaderText(null);
-		alert.setTitle("¡A purgar contrarrevolucionarios!");
-		alert.setContentText("Utiliza las flechas horizontales para moverte por el mapa y dispara presionando la barra espaciadora. La tecla 'E' "
-				+ "te permitirá eliminar más trotskos a su debido tiempo ;)");
+		alert.setTitle("¡Purge counterrevolutionaries!");
+		alert.setContentText("Use the horizontal arrows of your keyboard to move and shoot using the space bar. In addition, you can press 'E' key "
+				+ "from time to time to use our ultimate skill.");
 		alert.initOwner(controller.getWindow());
 		alert.getDialogPane().getStylesheets().add(getClass().getResource("style/app.css").toExternalForm());
 		alert.showAndWait();
@@ -90,7 +89,7 @@ public class MainWindow implements Initializable{
 	
 	@FXML private void handleViewHighscores() {
 		if (recordsList.getItems().isEmpty()) {
-			Label title = new Label("Todavía no se ha registrado ninguna puntuación.");
+			Label title = new Label("No scores have been registered yet.");
 			title.getStyleClass().add("italicBodyText");
 			((BorderPane) controller.getWindow().getScene().getRoot()).setCenter(title);
 		}
@@ -99,7 +98,7 @@ public class MainWindow implements Initializable{
 			center.setPadding(new Insets(20,20,20,20));
 			center.setAlignment(Pos.CENTER);
 			VBox content = new VBox(8);
-			Label title = new Label("Récords");
+			Label title = new Label("Highscore");
 			title.getStyleClass().add("simpleBodyText");
 			content.getChildren().addAll(title, recordsList);
 			center.getChildren().add(content);

@@ -1,9 +1,11 @@
 package application.gui;
 
 import java.net.URL;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,6 +26,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import model.Character;
+import model.Collisions;
+import model.Enemy;
+import model.Movement;
 import model.Projectile;
 
 public class GameWindow implements Initializable{
@@ -39,7 +44,6 @@ public class GameWindow implements Initializable{
 	private Image trotsky;
 	private List<Image> projectileImgs;
 	
-	
 	public GameWindow() {
 		controller = Controller.getInstance();
 		stalin = new Image(getClass().getClassLoader().getResource("application/resources/stalin.png").toExternalForm());
@@ -53,16 +57,14 @@ public class GameWindow implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ImageView stalin1 = new ImageView(stalin);
-		stalin1.setFitWidth(30);
-		stalin1.setFitHeight(35);
-		ImageView stalin2 = new ImageView(stalin);
-		stalin2.setFitWidth(30);
-		stalin2.setFitHeight(35);
-		ImageView stalin3 = new ImageView(stalin);
-		stalin3.setFitWidth(30);
-		stalin3.setFitHeight(35);
-		lifepointsContainer.getChildren().addAll(stalin1, stalin2, stalin3);
+
+		for (int i = 0; i < Controller.CHARACTER_LP; i++) {
+			ImageView lp = new ImageView(stalin);
+			lp.setFitWidth(30);
+			lp.setFitHeight(35);
+			lifepointsContainer.getChildren().add(lp);
+		}
+		
 		score.setText("0");
 		level.setText("01");
 		//Set canvas' size
@@ -83,7 +85,8 @@ public class GameWindow implements Initializable{
 	
 	private void gameLogic() {
 		//Create player
-		Character player = controller.createCharacter(canvas.getWidth()/2 -25, canvas.getHeight()-85, stalin);
+		Character player = controller.createCharacter(canvas.getWidth()/2 - 25, canvas.getHeight() - Controller.CHARACTER_HEIGHT, stalin);
+		controller.setCurrentPlayer(player);
 		//Create enemies
 	
 		//Create list of projectiles
@@ -112,6 +115,12 @@ public class GameWindow implements Initializable{
     		
     	});
 		
+		Set<Enemy> enemies = new HashSet<>();
+		//We start level 1 with 2 enemies that spawn randomly
+		Random random = new Random(Calendar.getInstance().getTimeInMillis());
+		enemies.add(controller.createEnemy(random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH)), random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5)), trotsky));
+		random.setSeed(Calendar.getInstance().getTimeInMillis());
+		enemies.add(controller.createEnemy(random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH)), random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5)), trotsky));
 		GraphicsContext graphics = canvas.getGraphicsContext2D();
         
         new AnimationTimer()
@@ -119,11 +128,11 @@ public class GameWindow implements Initializable{
             public void handle(long currentTime) {
             	//Clear screen
             	graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            	List<Projectile> aux = projectiles.stream().filter(p -> p.getY() + p.getHeight() < 0).collect(Collectors.toList());
-            	aux.forEach(p -> projectiles.remove(p));
+            	List<Projectile> projectilesToRemove = projectiles.stream().filter(p -> p.getY() + p.getHeight() < 0).collect(Collectors.toList());
+            	projectilesToRemove.forEach(p -> projectiles.remove(p));
             	//Update pressed keys
-            	if (keysPressed.contains(KeyCode.RIGHT) && player.getX() + player.getVx() < canvas.getWidth() - player.getWidth()/2) player.moveRight();
-            	if (keysPressed.contains(KeyCode.LEFT) && player.getX() - player.getVx() > 0 - player.getWidth()/2) player.moveLeft();
+            	if (keysPressed.contains(KeyCode.RIGHT) && player.getX() + player.getVx() < canvas.getWidth() - player.getWidth()/1.5) player.moveRight();
+            	if (keysPressed.contains(KeyCode.LEFT) && player.getX() - player.getVx() > 0 - player.getWidth()/2.6) player.moveLeft();
             	if (keysPressed.contains(KeyCode.SPACE)) {
             		projectiles.add(controller.createProjectile(player.getX()+player.getWidth()/3, player.getY(), projectileImgs));
             		keysPressed.remove(KeyCode.SPACE); //no shooting when holding down space bar
@@ -137,10 +146,106 @@ public class GameWindow implements Initializable{
             	projectiles.stream().forEach(p -> {
             		p.move();
             		graphics.drawImage(p.getCurrentImg(), p.getX(), p.getY(), p.getWidth(), p.getHeight());
+            		//Check collisions between projectiles and enemies
+            		Set<Enemy> enemiesToRemove = new HashSet<>();
+            		Set<Enemy> enemiesToAdd = new HashSet<>();
+            		enemies.forEach(e -> {
+            			if (Collisions.rectangularCollision(p.getX(), p.getY(), p.getWidth(), p.getHeight(), e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
+            				//Update score
+            				controller.increaseScore();
+            				score.setText(Integer.toString(controller.getCurrentScore()));
+            				//Add projectile to remove list
+            				projectilesToRemove.add(p);
+            				//Update enemy
+            				if (e.reduce()) {
+            					//Set new position of enemy
+            					e.setX((e.getX() - e.getWidth()*2) % (canvas.getWidth() - e.getWidth()));
+            					e.setY(e.getY() - e.getHeight()/2 % (canvas.getHeight() - e.getHeight()));
+            					//Duplicate enemy and set new X position for it
+            					Enemy newEnemy = controller.createEnemy(e);
+            					newEnemy.setX((e.getX() + e.getWidth()*2) % (canvas.getWidth() - e.getWidth()));
+            					//Add new enemy to add list
+            					enemiesToAdd.add(newEnemy);
+            					
+            				}
+            				else enemiesToRemove.add(e);
+            			};
+            		});
+            		//Remove enemies with 0 LP
+                	enemiesToRemove.forEach(e -> enemies.remove(e));
+                	//Add new enemies created by reduction
+                	enemiesToAdd.forEach(e -> enemies.add(e));
             	});
+            	//Remove projectiles that hit any enemy
+            	projectilesToRemove.forEach(p -> projectiles.remove(p));
                 //Update player
             	graphics.drawImage(player.getImg(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
+            	//Update enemies
+            	enemies.stream().forEach(e -> {
+            		//Check current X move
+            		if (e.getXCurrentMove() == null) {
+                		//Decide if first x move goes to left or right
+            			random.setSeed(Calendar.getInstance().getTimeInMillis());
+                		if (random.nextBoolean()) {
+                			e.setXCurrentMove(Movement.RIGHT);
+                		}
+                		else {
+                			e.setXCurrentMove(Movement.LEFT);
+                		}
+            		}
+	            	if (e.getXCurrentMove().equals(Movement.RIGHT)) {
+	            		//Move right till end of screen
+	            		if (e.getX() + e.getWidth()/1.1 < canvas.getWidth()) e.moveRight();
+	            		else e.setXCurrentMove(Movement.LEFT);
+	            	}
+	            	else {
+	            		//Move left till end of screen
+	            		if (e.getX() > 0) e.moveLeft();
+	            		else e.setXCurrentMove(Movement.RIGHT);
+	            	}
+            		//Check current Y move
+            		if (e.getYCurrentMove().equals(Movement.DOWN)) {
+            			//Move down till end of screen
+            			if (e.getY() + e.getHeight() < canvas.getHeight()) e.moveDown();
+            			else e.setYCurrentMove(Movement.UP);
+            		}
+            		else {
+            			//Move up till end of screen
+            			if (e.getY() > 0) e.moveUp();
+            			else e.setYCurrentMove(Movement.DOWN);
+            		}
+            		//Draw enemies
+            		graphics.drawImage(e.getImg(), e.getX(), e.getY(), e.getWidth(), e.getHeight());
+            	});
+            	//Check collisions between player and enemies
+        		enemies.forEach(e -> {
+        			if (Collisions.rectangularCollision(player.getX(), player.getY(), player.getWidth(), player.getHeight(), e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
+        				if (!player.reduceLP()) {
+        					endGame();
+        				}
+        				else {
+        					//Reduce LP in gui
+        					lifepointsContainer.getChildren().clear();
+        					for (int i = 0; i < player.getLp(); i++) {
+        						ImageView lp = new ImageView(stalin);
+            					lp.setFitWidth(30);
+            					lp.setFitHeight(35);
+        						lifepointsContainer.getChildren().add(lp);
+        					}
+        				}
+        				e.setYCurrentMove(Movement.UP);
+        			};
+        		});
             }
         }.start();
+	}
+	private void endGame() {
+		//TODO register score
+		if (controller.getCurrentPlayer().getLp() > 0) {
+			//TODO load winner screen
+		}
+		else {
+			//TODO load looser screen
+		}
 	}
 }

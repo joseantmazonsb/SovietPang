@@ -12,31 +12,33 @@ public class Controller {
 	//Attributes
 	private static Controller uniqueInstance;
 	private Stage window;
-	private String currentPlayer;
+	private Character currentPlayer;
+	private String playerName;
 	private int currentScore;
 	private int currentLevel;
 	
 	public static final int DEFAULT_WIDTH = 900;
 	public static final int DEFAULT_HEIGHT = 640;
 	
-	private static final double CHARACTER_WIDTH = 70;
-	private static final double CHARACTER_HEIGHT = 85;
-	private static final int CHARACTER_LP = 3;
-	public static final double CHARACTER_X_AXIS_SPEED = 30;
+	public static final double CHARACTER_WIDTH = 70;
+	public static final double CHARACTER_HEIGHT = 85;
+	public static final int CHARACTER_LP = 3;
+	public static final double CHARACTER_X_AXIS_SPEED = 24;
 	public static final double CHARACTER_Y_AXIS_SPEED = 0;
 	
-	private static final double ENEMY_WIDTH = 250;
-	private static final double ENEMY_HEIGHT = 265;
-	public static final double ENEMY_X_AXIS_SPEED = 4;
-	public static final double ENEMY_Y_AXIS_SPEED = 6;
-	private static final int ENEMY_LP = 4;
+	public static final double ENEMY_WIDTH = 200;
+	public static final double ENEMY_HEIGHT = 215;
+	public static final double ENEMY_X_AXIS_SPEED = 6;
+	public static final double ENEMY_Y_AXIS_SPEED = 8;
+	public static final int ENEMY_LP = 4;
 	
-	private static final double PROJECTILE_WIDTH = 30;
-	private static final double PROJECTILE_HEIGHT = 30;
+	public static final double PROJECTILE_WIDTH = 30;
+	public static final double PROJECTILE_HEIGHT = 30;
 	public static final double PROJECTILE_X_AXIS_SPEED = 0;
 	public static final double PROJECTILE_Y_AXIS_SPEED = 25;
 	
 	public static final int REWARDS_BONUS = 150;
+	public static final int SCORE_FOR_HITTING_ENEMIES = 100;
 	
 	//Constructor
 	public Controller() {
@@ -56,11 +58,17 @@ public class Controller {
 	public void setWindow(Stage window) {
 		this.window = window;
 	}
-	public String getCurrentPlayer() {
+	public Character getCurrentPlayer() {
 		return currentPlayer;
 	}
-	public void setCurrentPlayer(String currentPlayer) {
+	public void setCurrentPlayer(Character currentPlayer) {
 		this.currentPlayer = currentPlayer;
+	}
+	public String getPlayerName() {
+		return playerName;
+	}
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
 	}
 	public int getCurrentScore() {
 		return currentScore;
@@ -78,8 +86,8 @@ public class Controller {
 	public void nextLevel() {
 		currentLevel++;
 	}
-	public void addScore(int score) {
-		currentScore+=score;
+	public void increaseScore() {
+		currentScore+=SCORE_FOR_HITTING_ENEMIES;
 	}
 	public Character createCharacter(double x, double y, Image img) {
 		return new Character(x, y, CHARACTER_WIDTH, CHARACTER_HEIGHT, CHARACTER_LP, img);
@@ -87,8 +95,12 @@ public class Controller {
 	public Enemy createEnemy(double x, double y, Image img) {
 		return new Enemy(x, y, ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_LP, img);
 	}
+	public Enemy createEnemy(Enemy e) {
+		return new Enemy(e.getX(), e.getY(), e.getWidth(), e.getHeight(), e.getLp(), e.getImg());
+	}
 	public Projectile createProjectile(double x, double y, List<Image> imgs) {
 		return new Projectile(x, y, PROJECTILE_WIDTH, PROJECTILE_HEIGHT, imgs);
 		
 	}
+	
 }

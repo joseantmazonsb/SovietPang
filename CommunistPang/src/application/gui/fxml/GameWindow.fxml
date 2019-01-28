@@ -23,10 +23,10 @@
         </rowConstraints>
          <children>
             <HBox fx:id="lifepointsContainer" prefHeight="100.0" prefWidth="200.0" spacing="10.0" />
-            <Label alignment="TOP_CENTER" styleClass="gameText" text="PUNTOS" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-            <Label alignment="TOP_CENTER" styleClass="gameText" text="NIVEL" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
+            <Label alignment="TOP_CENTER" styleClass="gameText" text="SCORE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Label alignment="TOP_CENTER" styleClass="gameText" text="LEVEL" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
             <Label fx:id="score" alignment="TOP_CENTER" styleClass="gameText2" text="SCORE " GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <Label fx:id="level" alignment="TOP_CENTER" styleClass="gameText2" text="NIVEL" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <Label fx:id="level" alignment="TOP_CENTER" styleClass="gameText2" text="LEVEL" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

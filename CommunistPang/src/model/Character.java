@@ -89,4 +89,9 @@ public class Character {
 		public void moveDown() {
 			y -= vy;
 		}
+		public boolean reduceLP() {
+			lp--;
+			if (lp > 0 ) return true; //Returns true if player still has LP
+			return false;
+		}
 }

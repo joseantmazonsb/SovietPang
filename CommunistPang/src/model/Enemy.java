@@ -8,6 +8,7 @@ public class Enemy {
 	private double x, y, width, height, vx, vy; //vx and vy are the components of speed of X,Y axis respectively
 	private int lp; //Life points
 	private Image img;
+	private Movement xCurrentMove, yCurrentMove;
 	//Constructor
 	public Enemy(double x, double y, double width, double height, int lp, Image img) {
 		this.x = x;
@@ -18,6 +19,7 @@ public class Enemy {
 		this.img = img;
 		vx = Controller.ENEMY_X_AXIS_SPEED;
 		vy = Controller.ENEMY_Y_AXIS_SPEED;
+		yCurrentMove = Movement.DOWN;
 	}
 	//Getters & setters
 	public double getX() {
@@ -68,17 +70,37 @@ public class Enemy {
 	public void setImg(Image img) {
 		this.img = img;
 	}
+	public Movement getXCurrentMove() {
+		return xCurrentMove;
+	}
+	public void setXCurrentMove(Movement xCurrentMove) {
+		this.xCurrentMove = xCurrentMove;
+	}
+	public Movement getYCurrentMove() {
+		return yCurrentMove;
+	}
+	public void setYCurrentMove(Movement yCurrentMove) {
+		this.yCurrentMove = yCurrentMove;
+	}
 	//Methods
-	public void move() {
-		x += vx;
+	public void moveUp() {
+		y -= vy;
+	}
+	public void moveDown() {
 		y += vy;
 	}
+	public void moveRight() {
+		x += vx;
+	}
+	public void moveLeft() {
+		x -= vx;
+	}
 	public boolean reduce() {
-		width /= 1.2;
-		height /= 1.2;
+		width /= 1.25;
+		height /= 1.25;
 		lp--;
-		vy /= 1.2;
-		vx /= 1.2;
+		vy *= 1.1;
+		vx *= 1.1;
 		if (lp > 0) return true;
 		else return false; //If life points get to 0 the enemy is destroyed
 	}

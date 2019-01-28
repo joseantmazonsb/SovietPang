@@ -12,9 +12,9 @@
    <left>
       <VBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <JFXButton fx:id="playButton" onAction="#handlePlay" ripplerFill="BLACK" styleClass="commonButton" text="JUGAR" />
-            <JFXButton fx:id="highscoresButton" onAction="#handleViewHighscores" ripplerFill="BLACK" styleClass="commonButton" text="VER RÉCORDS" />
-            <JFXButton onAction="#handleExit" ripplerFill="BLACK" styleClass="commonButton" text="SALIR" />
+            <JFXButton fx:id="playButton" onAction="#handlePlay" ripplerFill="BLACK" styleClass="commonButton" text="PLAY" />
+            <JFXButton fx:id="highscoresButton" onAction="#handleViewHighscores" ripplerFill="BLACK" styleClass="commonButton" text="HIGHSCORES" />
+            <JFXButton onAction="#handleExit" ripplerFill="BLACK" styleClass="commonButton" text="QUIT" />
          </children>
          <padding>
             <Insets left="120.0" right="20.0" top="300.0" />
@@ -24,11 +24,11 @@
    <center>
       <VBox fx:id="playMenu" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Label styleClass="simpleBodyText" text="¡Hola! ¿Cómo te llamas, camarada?" />
-            <JFXTextField fx:id="nick" maxWidth="260.0" promptText="Introduce tu nombre" styleClass="textField" />
+            <Label styleClass="simpleBodyText" text="Hello there! What's your name, comrade? " />
+            <JFXTextField fx:id="nick" maxWidth="310.0" promptText="Enter our name" styleClass="textField" />
             <HBox alignment="CENTER_RIGHT" maxWidth="300.0">
                <children>
-                  <JFXButton fx:id="startButton" alignment="CENTER_RIGHT" disable="true" onAction="#handleStartGame" ripplerFill="BLACK" styleClass="clearButton" text="EMPEZAR" />
+                  <JFXButton fx:id="startButton" alignment="CENTER_RIGHT" disable="true" onAction="#handleStartGame" ripplerFill="BLACK" styleClass="clearButton" text="START" />
                </children>
             </HBox>
          </children>
