@@ -22,7 +22,7 @@ public class Controller {
 	
 	public static final double CHARACTER_WIDTH = 70;
 	public static final double CHARACTER_HEIGHT = 85;
-	public static final int CHARACTER_LP = 10;
+	public static final int CHARACTER_LP = 5;
 	public static final double CHARACTER_X_AXIS_SPEED = 24;
 	public static final double CHARACTER_Y_AXIS_SPEED = 0;
 	

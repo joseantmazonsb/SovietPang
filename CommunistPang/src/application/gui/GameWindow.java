@@ -138,42 +138,6 @@ public class GameWindow implements Initializable{
             	graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             	List<Projectile> projectilesToRemove = projectiles.stream().filter(p -> p.getY() + p.getHeight() < 0).collect(Collectors.toList());
             	projectilesToRemove.forEach(p -> projectiles.remove(p));
-            	
-            	//Update level
-            	
-            	//Variables to try that enemies do not show too much near of each other
-            	double x = random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH));
-        		double y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5));
-        		random.setSeed(Calendar.getInstance().getTimeInMillis());
-        		double previousX = 1;
-        		double previousY = 1;
-        		int n_enemies = 0;
-            	//Things to do
-        		if (controller.getCurrentLevel() >= 2 && controller.getCurrentLevel() <= 3) {
-        			n_enemies = random.nextInt(Controller.MAX_ENEMIES_LEVEL_2_3 - Controller.MIN_ENEMIES_LEVEL_2_3) + Controller.MIN_ENEMIES_LEVEL_2_3;
-        			for (int i = 0; i < n_enemies; i++) {
-        				
-        			}
-        			enemies.add(controller.createEnemy(x, y, trotsky));
-        			x = random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH));
-        			y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5));
-        			enemies.add(controller.createEnemy(x, y, trotsky));
-            		enemies.add(controller.createEnemy((previousX * x) % (canvas.getWidth() - Controller.ENEMY_WIDTH), (previousY * y) % (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5), trotsky));
-        			
-            	}
-            	if (controller.getCurrentLevel() >= 4 && controller.getCurrentLevel() <= 5) {
-            		
-				}
-				if (controller.getCurrentLevel() >= 6 && controller.getCurrentLevel() <= 7) {
-				            		
-				            	}
-				if (controller.getCurrentLevel() >= 8 && controller.getCurrentLevel() <= 9) {
-					
-				}
-
-            	if (controller.getCurrentLevel() == Controller.MAX_LEVELS) {
-            		
-            	}
             	//Update pressed keys
             	if (keysPressed.contains(KeyCode.RIGHT) && player.getX() + player.getVx() < canvas.getWidth() - player.getWidth()/1.5) player.moveRight();
             	if (keysPressed.contains(KeyCode.LEFT) && player.getX() - player.getVx() > 0 - player.getWidth()/2.6) player.moveLeft();
@@ -229,7 +193,6 @@ public class GameWindow implements Initializable{
             		//Check current X move
             		if (e.getXCurrentMove() == null) {
                 		//Decide if first x move goes to left or right
-            			random.setSeed(Calendar.getInstance().getTimeInMillis());
                 		if (random.nextBoolean()) {
                 			e.setXCurrentMove(Movement.RIGHT);
                 		}
@@ -292,6 +255,47 @@ public class GameWindow implements Initializable{
         			if (!controller.nextLevel()) {
         				//Player won the game
         				endGame();
+        			}
+        			else {
+        				level.setText(Integer.toString(controller.getCurrentLevel()));
+        				//Next level enemies
+        				//Variables to try that enemies do not show too much near of each other
+                    	double x = random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH));
+                		double y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5));
+                		random.setSeed(Calendar.getInstance().getTimeInMillis());
+                		double previousX = 1;
+                		double previousY = 1;
+                		int n_enemies = 0;
+                    	//Things to do
+                		if (controller.getCurrentLevel() >= 2 && controller.getCurrentLevel() <= 3) {
+                			n_enemies = random.nextInt(Controller.MAX_ENEMIES_LEVEL_2_3 - Controller.MIN_ENEMIES_LEVEL_2_3) + Controller.MIN_ENEMIES_LEVEL_2_3;
+                    	}
+                    	if (controller.getCurrentLevel() >= 4 && controller.getCurrentLevel() <= 5) {
+                			n_enemies = random.nextInt(Controller.MAX_ENEMIES_LEVEL_4_5 - Controller.MIN_ENEMIES_LEVEL_4_5) + Controller.MIN_ENEMIES_LEVEL_4_5;                    		
+        				}
+        				if (controller.getCurrentLevel() >= 6 && controller.getCurrentLevel() <= 7) {
+                			n_enemies = random.nextInt(Controller.MAX_ENEMIES_LEVEL_6_7 - Controller.MIN_ENEMIES_LEVEL_6_7) + Controller.MIN_ENEMIES_LEVEL_6_7;
+        				}
+        				if (controller.getCurrentLevel() >= 8 && controller.getCurrentLevel() <= 9) {
+                			n_enemies = random.nextInt(Controller.MAX_ENEMIES_LEVEL_8_9 - Controller.MIN_ENEMIES_LEVEL_8_9) + Controller.MIN_ENEMIES_LEVEL_8_9;
+        				}
+
+                    	if (controller.getCurrentLevel() == Controller.MAX_LEVELS) {
+                			n_enemies = random.nextInt(Controller.MAX_ENEMIES_LEVEL_10 - Controller.MIN_ENEMIES_LEVEL_10) + Controller.MIN_ENEMIES_LEVEL_10;                    		
+                    		//add boss
+                    		enemies.add(controller.createBoss((previousX * x) % (canvas.getWidth() - Controller.ENEMY_WIDTH), (previousY * y) % (canvas.getHeight() - Controller.ENEMY_HEIGHT - controller.getCurrentPlayer().getHeight()*5), trotsky));
+                    		previousX = x;
+                    		previousY = y;
+                    		x = random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH));
+                    		y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - controller.getCurrentPlayer().getHeight()*5));
+                    	}
+                    	for (int i = 0; i < n_enemies; i++) {
+                    		enemies.add(controller.createEnemy((previousX * x) % (canvas.getWidth() - Controller.ENEMY_WIDTH), (previousY * y) % (canvas.getHeight() - Controller.ENEMY_HEIGHT - controller.getCurrentPlayer().getHeight()*5), trotsky));
+                    		previousX = x;
+                    		previousY = y;
+                    		x = random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH));
+                    		y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - controller.getCurrentPlayer().getHeight()*5));
+            			}
         			}
         		}
             }

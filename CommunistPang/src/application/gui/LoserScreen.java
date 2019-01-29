@@ -41,6 +41,7 @@ public class LoserScreen implements Initializable {
 	
 	@FXML private void handlePlayAgain() {
 		try {
+			rootPane.setTop(null);
 			rootPane.setCenter(FXMLLoader.load(getClass().getClassLoader().getResource("application/gui/fxml/GameWindow.fxml")));
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -25,7 +25,7 @@
       <VBox fx:id="playMenu" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
             <Label styleClass="simpleBodyText" text="Hello there! What's your name, comrade? " />
-            <JFXTextField fx:id="nick" maxWidth="310.0" promptText="Enter our name" styleClass="textField" />
+            <JFXTextField fx:id="nick" maxWidth="364.0" prefHeight="34.0" prefWidth="364.0" promptText="Enter our name" styleClass="textField" />
             <HBox alignment="CENTER_RIGHT" maxWidth="300.0">
                <children>
                   <JFXButton fx:id="startButton" alignment="CENTER_RIGHT" disable="true" onAction="#handleStartGame" ripplerFill="BLACK" styleClass="clearButton" text="START" />
