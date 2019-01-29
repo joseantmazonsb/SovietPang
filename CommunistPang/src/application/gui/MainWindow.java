@@ -17,8 +17,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -38,16 +41,12 @@ public class MainWindow implements Initializable{
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		rootPane.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+			if (e.getCode() == KeyCode.SPACE) e.consume();
+		});
 		rootPane.setOnKeyPressed(e -> {
 			if (e.getCode().equals(KeyCode.ESCAPE)) {
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setHeaderText(null);
-				alert.setTitle("Quit");
-				alert.setContentText("Are you sure you want to exit SovietPang? Who will terminate the counterrevolutionaries then?");
-				alert.initOwner(controller.getWindow());
-				alert.getDialogPane().getStylesheets().add(getClass().getResource("style/app.css").toExternalForm());
-				alert.showAndWait();
-				if (alert.getResult().getButtonData().isDefaultButton()) handleExit();
+				handleExit();
 			}
 		});
 		
@@ -59,8 +58,6 @@ public class MainWindow implements Initializable{
 		});
 		//Bind TextField to start button to only enable button if TextField not empty
 		startButton.disableProperty().bind(Bindings.createBooleanBinding(() -> nick.getText().trim().isEmpty(), nick.textProperty())); //TODO learn about this
-		//Graphic glitch
-		playButton.setDisableVisualFocus(true);
 	}
 	
 	@FXML private void handlePlay() {
@@ -78,6 +75,10 @@ public class MainWindow implements Initializable{
 				+ "from time to time to use our ultimate skill.");
 		alert.initOwner(controller.getWindow());
 		alert.getDialogPane().getStylesheets().add(getClass().getResource("style/app.css").toExternalForm());
+		//Style buttons
+		//((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).getStyleClass().add("dialogDefaultButton");
+		((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText("OK");
+		//Show alert
 		alert.showAndWait();
 		try {
 			rootPane.setLeft(null);
@@ -108,7 +109,20 @@ public class MainWindow implements Initializable{
 	}
 	
 	@FXML private void handleExit() {
-		System.out.println("Exiting SovietPang...");
-		controller.getWindow().close();
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setHeaderText(null);
+		alert.setTitle("Quit");
+		alert.setContentText("Are you sure you want to exit SovietPang? Who will terminate the counterrevolutionaries then?");
+		alert.initOwner(controller.getWindow());
+		alert.getDialogPane().getStylesheets().add(getClass().getResource("style/app.css").toExternalForm());
+		//Style buttons
+		((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText("Yes");
+		((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("No");
+		//Show alet
+		alert.showAndWait();
+		if (alert.getResult().getButtonData().isDefaultButton()) {
+			System.out.println("Exiting SovietPang...");
+			controller.getWindow().close();
+		}
 	}
 }

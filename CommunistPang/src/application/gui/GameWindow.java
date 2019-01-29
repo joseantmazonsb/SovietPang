@@ -1,5 +1,6 @@
 package application.gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -118,9 +120,15 @@ public class GameWindow implements Initializable{
 		Set<Enemy> enemies = new HashSet<>();
 		//We start level 1 with 2 enemies that spawn randomly
 		Random random = new Random(Calendar.getInstance().getTimeInMillis());
-		enemies.add(controller.createEnemy(random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH)), random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5)), trotsky));
+		double x = random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH));
+		double y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5));
+		enemies.add(controller.createEnemy(x, y, trotsky));
 		random.setSeed(Calendar.getInstance().getTimeInMillis());
-		enemies.add(controller.createEnemy(random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH)), random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5)), trotsky));
+		double previousX = x;
+		double previousY = y;
+		x = random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH));
+		y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5));
+		enemies.add(controller.createEnemy((previousX * x) % (canvas.getWidth() - Controller.ENEMY_WIDTH), (previousY * y) % (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5), trotsky));
 		GraphicsContext graphics = canvas.getGraphicsContext2D();
         
         new AnimationTimer()
@@ -130,6 +138,42 @@ public class GameWindow implements Initializable{
             	graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             	List<Projectile> projectilesToRemove = projectiles.stream().filter(p -> p.getY() + p.getHeight() < 0).collect(Collectors.toList());
             	projectilesToRemove.forEach(p -> projectiles.remove(p));
+            	
+            	//Update level
+            	
+            	//Variables to try that enemies do not show too much near of each other
+            	double x = random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH));
+        		double y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5));
+        		random.setSeed(Calendar.getInstance().getTimeInMillis());
+        		double previousX = 1;
+        		double previousY = 1;
+        		int n_enemies = 0;
+            	//Things to do
+        		if (controller.getCurrentLevel() >= 2 && controller.getCurrentLevel() <= 3) {
+        			n_enemies = random.nextInt(Controller.MAX_ENEMIES_LEVEL_2_3 - Controller.MIN_ENEMIES_LEVEL_2_3) + Controller.MIN_ENEMIES_LEVEL_2_3;
+        			for (int i = 0; i < n_enemies; i++) {
+        				
+        			}
+        			enemies.add(controller.createEnemy(x, y, trotsky));
+        			x = random.nextInt((int)(canvas.getWidth() - Controller.ENEMY_WIDTH));
+        			y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5));
+        			enemies.add(controller.createEnemy(x, y, trotsky));
+            		enemies.add(controller.createEnemy((previousX * x) % (canvas.getWidth() - Controller.ENEMY_WIDTH), (previousY * y) % (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight()*5), trotsky));
+        			
+            	}
+            	if (controller.getCurrentLevel() >= 4 && controller.getCurrentLevel() <= 5) {
+            		
+				}
+				if (controller.getCurrentLevel() >= 6 && controller.getCurrentLevel() <= 7) {
+				            		
+				            	}
+				if (controller.getCurrentLevel() >= 8 && controller.getCurrentLevel() <= 9) {
+					
+				}
+
+            	if (controller.getCurrentLevel() == Controller.MAX_LEVELS) {
+            		
+            	}
             	//Update pressed keys
             	if (keysPressed.contains(KeyCode.RIGHT) && player.getX() + player.getVx() < canvas.getWidth() - player.getWidth()/1.5) player.moveRight();
             	if (keysPressed.contains(KeyCode.LEFT) && player.getX() - player.getVx() > 0 - player.getWidth()/2.6) player.moveLeft();
@@ -221,10 +265,18 @@ public class GameWindow implements Initializable{
         		enemies.forEach(e -> {
         			if (Collisions.rectangularCollision(player.getX(), player.getY(), player.getWidth(), player.getHeight(), e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
         				if (!player.reduceLP()) {
+        					this.stop();
         					endGame();
         				}
         				else {
-        					//Reduce LP in gui
+        					//Update enemy
+        					e.setYCurrentMove(Movement.UP);
+        					//Randomly decide if enemy goes left or right when collision
+            				if (random.nextBoolean()) e.setXCurrentMove(Movement.LEFT);
+            				else e.setXCurrentMove(Movement.RIGHT);
+            				//Get enemy out of player radius so it only hits the player once
+            				e.setY(player.getY() - e.getHeight());
+        					//Reduce player's LP in gui
         					lifepointsContainer.getChildren().clear();
         					for (int i = 0; i < player.getLp(); i++) {
         						ImageView lp = new ImageView(stalin);
@@ -233,9 +285,15 @@ public class GameWindow implements Initializable{
         						lifepointsContainer.getChildren().add(lp);
         					}
         				}
-        				e.setYCurrentMove(Movement.UP);
         			};
         		});
+        		//Check if there are enemies. If not, go to next level
+        		if (enemies.isEmpty()) {
+        			if (!controller.nextLevel()) {
+        				//Player won the game
+        				endGame();
+        			}
+        		}
             }
         }.start();
 	}
@@ -245,7 +303,13 @@ public class GameWindow implements Initializable{
 			//TODO load winner screen
 		}
 		else {
-			//TODO load looser screen
+			//TODO load loser screen
+			try {
+				rootPane.setTop(null);
+				rootPane.setCenter(FXMLLoader.load(getClass().getClassLoader().getResource("application/gui/fxml/LoserScreen.fxml")));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

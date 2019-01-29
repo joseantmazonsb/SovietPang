@@ -17,6 +17,11 @@
 	-fx-background-size: cover;   
 }
 
+.loserLayout {
+	-fx-background-image: url("../../resources/loserBackground.png");
+	-fx-background-size: cover;   
+}
+
 .topBar {
 	-fx-background-color: black;
 }
@@ -31,17 +36,18 @@
 	-fx-font-size: 14px;
 	-fx-text-fill: white;
 }
+
 .dialog-pane .button {
-   	-fx-background-color: #f32e2e;
+	-fx-background-color: #d83737;
    	-fx-text-fill: white;
    	-fx-wrap-text: true;
    	-fx-effect: dropshadow(three-pass-box, #ed7171, 10.0, 0.0, 0.0, 0.0);
    	-fx-cursor: hand;
 }
+
 .dialog-pane .button:hover {
 	-fx-background-color: #ed7171;
 }
-
 /* Common Buttons */
 
 .commonButton {

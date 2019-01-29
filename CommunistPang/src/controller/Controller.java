@@ -22,7 +22,7 @@ public class Controller {
 	
 	public static final double CHARACTER_WIDTH = 70;
 	public static final double CHARACTER_HEIGHT = 85;
-	public static final int CHARACTER_LP = 3;
+	public static final int CHARACTER_LP = 10;
 	public static final double CHARACTER_X_AXIS_SPEED = 24;
 	public static final double CHARACTER_Y_AXIS_SPEED = 0;
 	
@@ -39,6 +39,23 @@ public class Controller {
 	
 	public static final int REWARDS_BONUS = 150;
 	public static final int SCORE_FOR_HITTING_ENEMIES = 100;
+	
+	public static final int MAX_LEVELS = 10;
+	
+	public static final int MIN_ENEMIES_LEVEL_2_3 = 2;
+	public static final int MAX_ENEMIES_LEVEL_2_3 = 4;
+	
+	public static final int MIN_ENEMIES_LEVEL_4_5 = 4;
+	public static final int MAX_ENEMIES_LEVEL_4_5 = 6;
+	
+	public static final int MIN_ENEMIES_LEVEL_6_7 = 6;
+	public static final int MAX_ENEMIES_LEVEL_6_7 = 8;
+	
+	public static final int MIN_ENEMIES_LEVEL_8_9 = 8;
+	public static final int MAX_ENEMIES_LEVEL_8_9 = 10;
+	
+	public static final int MIN_ENEMIES_LEVEL_10 = 4;
+	public static final int MAX_ENEMIES_LEVEL_10 = 6;
 	
 	//Constructor
 	public Controller() {
@@ -83,8 +100,10 @@ public class Controller {
 		this.currentLevel = currentLevel;
 	}
 	//Methods
-	public void nextLevel() {
+	public boolean nextLevel() {
 		currentLevel++;
+		if (currentLevel <= MAX_LEVELS) return true;
+		return false;
 	}
 	public void increaseScore() {
 		currentScore+=SCORE_FOR_HITTING_ENEMIES;
@@ -94,6 +113,9 @@ public class Controller {
 	}
 	public Enemy createEnemy(double x, double y, Image img) {
 		return new Enemy(x, y, ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_LP, img);
+	}
+	public Enemy createBoss(double x, double y, Image img) {
+		return new Enemy(x, y, ENEMY_WIDTH*2, ENEMY_HEIGHT*2, ENEMY_LP*2, img);
 	}
 	public Enemy createEnemy(Enemy e) {
 		return new Enemy(e.getX(), e.getY(), e.getWidth(), e.getHeight(), e.getLp(), e.getImg());
