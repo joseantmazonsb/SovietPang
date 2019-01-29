@@ -42,19 +42,21 @@ public class GameWindow implements Initializable{
 	@FXML private HBox lifepointsContainer; //Contains Stalins that count how many LP the player has
 	
 	private Controller controller;
-	private Image stalin;
-	private Image trotsky;
+	private Image stalin, trotsky, stalinHit;
 	private List<Image> projectileImgs;
+	boolean playerHit;
 	
 	public GameWindow() {
 		controller = Controller.getInstance();
 		stalin = new Image(getClass().getClassLoader().getResource("application/resources/stalin.png").toExternalForm());
+		stalinHit = new Image(getClass().getClassLoader().getResource("application/resources/stalin_hit.png").toExternalForm());
 		trotsky = new Image(getClass().getClassLoader().getResource("application/resources/trotsky.png").toExternalForm());
 		projectileImgs = new LinkedList<>();
 		projectileImgs.add(new Image(getClass().getClassLoader().getResource("application/resources/bullet1.png").toExternalForm()));
 		projectileImgs.add(new Image(getClass().getClassLoader().getResource("application/resources/bullet2.png").toExternalForm()));
 		projectileImgs.add(new Image(getClass().getClassLoader().getResource("application/resources/bullet3.png").toExternalForm()));
 		projectileImgs.add(new Image(getClass().getClassLoader().getResource("application/resources/bullet4.png").toExternalForm()));
+		playerHit = false;
 	}
 	
 	@Override
@@ -186,8 +188,6 @@ public class GameWindow implements Initializable{
             	});
             	//Remove projectiles that hit any enemy
             	projectilesToRemove.forEach(p -> projectiles.remove(p));
-                //Update player
-            	graphics.drawImage(player.getImg(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
             	//Update enemies
             	enemies.stream().forEach(e -> {
             		//Check current X move
@@ -225,6 +225,7 @@ public class GameWindow implements Initializable{
             		graphics.drawImage(e.getImg(), e.getX(), e.getY(), e.getWidth(), e.getHeight());
             	});
             	//Check collisions between player and enemies
+            	playerHit = false;
         		enemies.forEach(e -> {
         			if (Collisions.rectangularCollision(player.getX(), player.getY(), player.getWidth(), player.getHeight(), e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
         				if (!player.reduceLP()) {
@@ -247,9 +248,17 @@ public class GameWindow implements Initializable{
             					lp.setFitHeight(35);
         						lifepointsContainer.getChildren().add(lp);
         					}
+        					playerHit = true;
         				}
         			};
         		});
+        		if (playerHit) {
+        			//Change img of player to inform of collision
+    				player.setImg(stalinHit);
+        		}
+        		else player.setImg(stalin);
+        		//Update player
+            	graphics.drawImage(player.getImg(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
         		//Check if there are enemies. If not, go to next level
         		if (enemies.isEmpty()) {
         			if (!controller.nextLevel()) {
