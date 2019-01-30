@@ -35,7 +35,8 @@ public class LoserScreen implements Initializable {
 		});
 		//Show score
 		score.setText("YOUR SCORE: " + controller.getCurrentScore());
-		//Clear score from controller
+		//Clear score and level from controller
+		controller.setCurrentLevel(1);
 		controller.setCurrentScore(0);
 	}
 	

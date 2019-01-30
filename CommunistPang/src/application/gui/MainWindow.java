@@ -1,5 +1,10 @@
 package application.gui;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -13,6 +18,7 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -23,7 +29,9 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class MainWindow implements Initializable{
@@ -33,7 +41,7 @@ public class MainWindow implements Initializable{
 	@FXML private JFXTextField nick;
 	
 	private Controller controller;
-	private JFXListView<String> recordsList;
+	private VBox recordsList;
 	
 	public MainWindow() {
 		controller = Controller.getInstance();
@@ -50,8 +58,32 @@ public class MainWindow implements Initializable{
 			}
 		});
 		
-		recordsList = new JFXListView<>();
+		recordsList = new VBox(8);
 		recordsList.getStyleClass().add("listView");
+		recordsList.setAlignment(Pos.CENTER);
+		
+		File file = new File("Highscores.txt");
+		Label title = new Label("HIGHSCORES");
+		title.getStyleClass().add("italicBodyTextBig");
+		recordsList.getChildren().add(title);
+		try {
+			VBox.setMargin(title, new Insets(20));
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line = reader.readLine();
+			while (line != null) {
+				Label score = new Label(line);
+				score.getStyleClass().add("italicBodyTextYellow");
+				recordsList.getChildren().add(score);
+				line = reader.readLine();
+			}
+			reader.close();
+		} 
+		catch (IOException e) {
+			title = new Label("No scores have been registered yet.");
+			title.getStyleClass().add("italicBodyText");
+			recordsList.getChildren().add(title);
+		}		
+		
 		nick.getStyleClass().add("textField");
 		nick.setOnAction(e -> {
 			if (!nick.getText().isEmpty()) handleStartGame();
@@ -89,23 +121,7 @@ public class MainWindow implements Initializable{
 	}
 	
 	@FXML private void handleViewHighscores() {
-		if (recordsList.getItems().isEmpty()) {
-			Label title = new Label("No scores have been registered yet.");
-			title.getStyleClass().add("italicBodyText");
-			((BorderPane) controller.getWindow().getScene().getRoot()).setCenter(title);
-		}
-		else {
-			HBox center = new HBox();
-			center.setPadding(new Insets(20,20,20,20));
-			center.setAlignment(Pos.CENTER);
-			VBox content = new VBox(8);
-			Label title = new Label("Highscore");
-			title.getStyleClass().add("simpleBodyText");
-			content.getChildren().addAll(title, recordsList);
-			center.getChildren().add(content);
-			((BorderPane) controller.getWindow().getScene().getRoot()).setCenter(center);
-			//TODO iterate file and show records
-		}	
+		((BorderPane) controller.getWindow().getScene().getRoot()).setCenter(recordsList);
 	}
 	
 	@FXML private void handleExit() {
@@ -118,7 +134,7 @@ public class MainWindow implements Initializable{
 		//Style buttons
 		((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setText("Yes");
 		((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("No");
-		//Show alet
+		//Show alert
 		alert.showAndWait();
 		if (alert.getResult().getButtonData().isDefaultButton()) {
 			System.out.println("Exiting SovietPang...");

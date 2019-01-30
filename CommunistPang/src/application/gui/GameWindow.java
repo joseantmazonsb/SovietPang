@@ -1,5 +1,9 @@
 package application.gui;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
@@ -44,7 +48,8 @@ public class GameWindow implements Initializable{
 	private Controller controller;
 	private Image stalin, trotsky, stalinHit;
 	private List<Image> projectileImgs;
-	boolean playerHit;
+	boolean playerHit; //Stores if player was hit by an enemy
+	int nFramesHit; //Number of frames we show hit character since it has been hit
 	
 	public GameWindow() {
 		controller = Controller.getInstance();
@@ -57,6 +62,7 @@ public class GameWindow implements Initializable{
 		projectileImgs.add(new Image(getClass().getClassLoader().getResource("application/resources/bullet3.png").toExternalForm()));
 		projectileImgs.add(new Image(getClass().getClassLoader().getResource("application/resources/bullet4.png").toExternalForm()));
 		playerHit = false;
+		nFramesHit = 0;
 	}
 	
 	@Override
@@ -151,7 +157,6 @@ public class GameWindow implements Initializable{
             		//TODO pause
             		controller.getWindow().close();
             	}
-            	
             	//Update projectiles
             	projectiles.stream().forEach(p -> {
             		p.move();
@@ -225,7 +230,9 @@ public class GameWindow implements Initializable{
             		graphics.drawImage(e.getImg(), e.getX(), e.getY(), e.getWidth(), e.getHeight());
             	});
             	//Check collisions between player and enemies
-            	playerHit = false;
+            	if (playerHit && nFramesHit == 0) { //If player has been hit by enemy, but has been nFramesHit without any other hit, we show normal character
+                	playerHit = false;
+            	}
         		enemies.forEach(e -> {
         			if (Collisions.rectangularCollision(player.getX(), player.getY(), player.getWidth(), player.getHeight(), e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
         				if (!player.reduceLP()) {
@@ -249,7 +256,11 @@ public class GameWindow implements Initializable{
         						lifepointsContainer.getChildren().add(lp);
         					}
         					playerHit = true;
+        					nFramesHit = Controller.N_FRAMES_SHOW_HIT_CHARACTER;
         				}
+        			}
+        			else {
+        				if (nFramesHit > 0) nFramesHit--;
         			};
         		});
         		if (playerHit) {
@@ -311,7 +322,56 @@ public class GameWindow implements Initializable{
         }.start();
 	}
 	private void endGame() {
-		//TODO register score
+		//register score
+		File file = new File("Highscores.txt");
+		File fileNew = new File("tmp.txt");
+		try {
+			if (!file.exists()) {
+				FileWriter writer = new FileWriter(file, false); //Always overwrite
+				writer.write(controller.getPlayerName() + " - " + controller.getCurrentScore() + "\n");
+				writer.close();
+			}
+			else {
+				FileWriter writer = new FileWriter(fileNew, false); //Always overwrite
+				//Read current scores to store this one in order
+				BufferedReader reader = new BufferedReader(new FileReader(file));
+				String line = reader.readLine();
+				int nLines = 1;
+				boolean newScoreWrited = false;
+				while (line != null && nLines <= Controller.MAX_NUMBER_OF_REGISTERED_SCORES) {
+					String[] score = line.split(" - ");
+					if (Integer.parseInt(score[1]) < controller.getCurrentScore()) {
+						if (!newScoreWrited) {
+							writer.write(controller.getPlayerName() + " - " + controller.getCurrentScore() + "\n");
+							nLines++;
+							newScoreWrited = true;
+						}
+						writer.write(score[0] + " - " + score[1] + "\n");
+						nLines++;
+					}
+					else {
+						writer.write(score[0] + " - " + score[1] + "\n");
+						nLines++;
+					}
+					
+					line = reader.readLine();
+				}
+				//if current score is worse that all scores registered and there is still room for it to register
+				if (nLines <= Controller.MAX_NUMBER_OF_REGISTERED_SCORES) {
+					writer.write(controller.getPlayerName() + " - " + controller.getCurrentScore() + "\n");
+				}
+				
+				reader.close();
+				writer.close();
+				file.delete();
+				fileNew.renameTo(new File("Highscores.txt"));
+			}
+			
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		if (controller.getCurrentPlayer().getLp() > 0) {
 			//TODO load winner screen
 		}
