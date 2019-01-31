@@ -12,6 +12,11 @@
          <children>
             <Label fx:id="score" alignment="TOP_CENTER" styleClass="gameText" text="YOUR SCORE: ">
                <padding>
+                  <Insets top="30.0" />
+               </padding>
+            </Label>
+            <Label fx:id="levelReached" alignment="TOP_CENTER" styleClass="gameTextLittle" text="level Reached: ">
+               <padding>
                   <Insets bottom="50.0" />
                </padding>
             </Label>

@@ -6,35 +6,40 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" prefHeight="640.0" prefWidth="980.0" styleClass="layout" stylesheets="@../style/app.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.gui.MainWindow">
-   <left>
-      <VBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
-         <children>
-            <JFXButton fx:id="playButton" onAction="#handlePlay" ripplerFill="BLACK" styleClass="commonButton" text="PLAY" />
-            <JFXButton fx:id="highscoresButton" onAction="#handleViewHighscores" ripplerFill="BLACK" styleClass="commonButton" text="HIGHSCORES" />
-            <JFXButton onAction="#handleExit" ripplerFill="BLACK" styleClass="commonButton" text="QUIT" />
-         </children>
-         <padding>
-            <Insets left="120.0" right="20.0" top="300.0" />
-         </padding>
-      </VBox>
-   </left>
-   <center>
-      <VBox fx:id="playMenu" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label styleClass="simpleBodyText" text="Hello there! What's your name, comrade? " />
-            <JFXTextField fx:id="nick" maxWidth="364.0" prefHeight="34.0" prefWidth="364.0" promptText="Enter our name" styleClass="textField" />
-            <HBox alignment="CENTER_RIGHT" maxWidth="300.0">
+<StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.gui.MainWindow">
+   <children>
+      <BorderPane fx:id="borderPane" prefHeight="640.0" prefWidth="980.0" styleClass="layout" stylesheets="@../style/app.css">
+         <left>
+            <VBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
                <children>
-                  <JFXButton fx:id="startButton" alignment="CENTER_RIGHT" disable="true" onAction="#handleStartGame" ripplerFill="BLACK" styleClass="clearButton" text="START" />
+                  <JFXButton fx:id="playButton" onAction="#handlePlay" ripplerFill="BLACK" styleClass="commonButton" text="PLAY" />
+                  <JFXButton fx:id="highscoresButton" onAction="#handleViewHighscores" ripplerFill="BLACK" styleClass="commonButton" text="HIGHSCORES" />
+                  <JFXButton onAction="#handleExit" ripplerFill="BLACK" styleClass="commonButton" text="QUIT" />
                </children>
-            </HBox>
-         </children>
-         <padding>
-            <Insets left="100.0" top="40.0" />
-         </padding>
-      </VBox>
-   </center>
-</BorderPane>
+               <padding>
+                  <Insets left="120.0" right="20.0" top="300.0" />
+               </padding>
+            </VBox>
+         </left>
+         <center>
+            <VBox fx:id="playMenu" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label styleClass="simpleBodyText" text="Hello there! What's your name, comrade? " />
+                  <JFXTextField fx:id="nick" maxWidth="364.0" prefHeight="34.0" prefWidth="364.0" promptText="Enter our name" styleClass="textField" />
+                  <HBox alignment="CENTER_RIGHT" maxWidth="300.0">
+                     <children>
+                        <JFXButton fx:id="startButton" alignment="CENTER_RIGHT" disable="true" onAction="#handleStartGame" ripplerFill="BLACK" styleClass="clearButton" text="START" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets left="100.0" top="40.0" />
+               </padding>
+            </VBox>
+         </center>
+      </BorderPane>
+   </children>
+</StackPane>

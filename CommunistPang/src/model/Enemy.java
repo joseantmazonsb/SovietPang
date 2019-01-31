@@ -83,6 +83,14 @@ public class Enemy {
 		this.yCurrentMove = yCurrentMove;
 	}
 	//Methods
+	public void reverseXMovement() {
+		if (xCurrentMove == Movement.RIGHT) xCurrentMove = Movement.LEFT;
+		else xCurrentMove = Movement.RIGHT;
+	}
+	public void reverseYMovement() {
+		if (xCurrentMove == Movement.UP) xCurrentMove = Movement.DOWN;
+		else xCurrentMove = Movement.UP;
+	}
 	public void moveUp() {
 		y -= vy;
 	}

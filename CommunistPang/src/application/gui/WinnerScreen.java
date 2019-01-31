@@ -17,15 +17,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
-public class LoserScreen implements Initializable {
+public class WinnerScreen implements Initializable {
 	
 	@FXML private BorderPane rootPane;
-	@FXML private Label score, levelReached;
+	@FXML private Label score;
 	@FXML private JFXButton playAgainButton;
 	
 	private Controller controller;
 	
-	public LoserScreen() {
+	public WinnerScreen() {
 		controller = Controller.getInstance();
 	}
 	
@@ -36,8 +36,6 @@ public class LoserScreen implements Initializable {
 		});
 		//Show score
 		score.setText("YOUR SCORE: " + controller.getCurrentScore());
-		//Show level
-		levelReached.setText("LEVEL REACHED: " + controller.getCurrentLevel());
 		//Clear score and level from controller
 		controller.setCurrentLevel(1);
 		controller.setCurrentScore(0);

@@ -1,9 +1,12 @@
 package controller;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import listeners.BooleanEvent;
+import listeners.BooleanListener;
 import model.Character;
 import model.Enemy;
 import model.Projectile;
@@ -16,6 +19,8 @@ public class Controller {
 	private String playerName;
 	private int currentScore;
 	private int currentLevel;
+	private boolean paused; //Stores if user has pressed ESC key to pause the game
+	private List<BooleanListener> booleanListeners;
 	
 	public static final int DEFAULT_WIDTH = 900;
 	public static final int DEFAULT_HEIGHT = 640;
@@ -57,14 +62,16 @@ public class Controller {
 	public static final int MIN_ENEMIES_LEVEL_10 = 4;
 	public static final int MAX_ENEMIES_LEVEL_10 = 6;
 	
-	public static final int N_FRAMES_SHOW_HIT_CHARACTER = 30;
+	public static final int N_FRAMES_SHOW_HIT_CHARACTER = 60;
 	
-	public static final int MAX_NUMBER_OF_REGISTERED_SCORES = 5;
+	public static final int MAX_NUMBER_OF_REGISTERED_SCORES = 8;
 	
 	//Constructor
 	public Controller() {
 		currentScore = 0;
 		currentLevel = 1;
+		paused = false;
+		booleanListeners = new LinkedList<>();
 	}
 	
 	//Singleton
@@ -113,7 +120,8 @@ public class Controller {
 		currentScore+=SCORE_FOR_HITTING_ENEMIES;
 	}
 	public Character createCharacter(double x, double y, Image img) {
-		return new Character(x, y, CHARACTER_WIDTH, CHARACTER_HEIGHT, CHARACTER_LP, img);
+		currentPlayer = new Character(x, y, CHARACTER_WIDTH, CHARACTER_HEIGHT, CHARACTER_LP, img);
+		return currentPlayer;
 	}
 	public Enemy createEnemy(double x, double y, Image img) {
 		return new Enemy(x, y, ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_LP, img);
@@ -128,5 +136,27 @@ public class Controller {
 		return new Projectile(x, y, PROJECTILE_WIDTH, PROJECTILE_HEIGHT, imgs);
 		
 	}
-	
+	public boolean isPaused() {
+		return paused;
+	}
+	public void setPaused(boolean paused) {
+		BooleanEvent e = new BooleanEvent(this, this.paused, paused);
+		this.paused = paused;
+		notifyBooleanListeners(e);
+	}
+	private void notifyBooleanListeners(BooleanEvent e) {
+		List<BooleanListener> copy;
+		synchronized (booleanListeners) {
+			copy = new LinkedList<>(booleanListeners);
+		}
+		for (BooleanListener l : copy) {
+			l.booleanPropertyChanged(e);
+		}
+	}
+	synchronized public boolean addBooleanListener(BooleanListener l) {
+		return booleanListeners.add(l);
+	}
+	synchronized public boolean removeBooleanListener(BooleanListener l) {
+		return booleanListeners.remove(l);
+	}
 }

@@ -26,8 +26,18 @@
 	-fx-background-size: cover;   
 }
 
+.pauseLayout {
+	-fx-background-color: #a90000;
+	-fx-opacity: 0.8;
+}
+
 .loserLayout {
 	-fx-background-image: url("../../resources/loserBackground.png");
+	-fx-background-size: cover;   
+}
+
+.winnerLayout {
+	-fx-background-image: url("../../resources/winnerBackground.jpg");
 	-fx-background-size: cover;   
 }
 
@@ -141,6 +151,12 @@
 	-fx-text-fill: #ffff00;
 }
 
+.gameTextLittle {
+	-fx-font-family: "Kalinka";
+	-fx-font-size: 24px;
+	-fx-text-fill: #ffff00;
+}
+
 .gameText2 {
 	-fx-font-family: "Kalinka";
 	-fx-font-size: 32px;
@@ -151,6 +167,12 @@
 	-fx-font-family: "Kalinka";
 	-fx-font-size: 86px;
 	-fx-text-fill: #f32e2e;
+}
+
+.gameText4 {
+	-fx-font-family: "Kalinka";
+	-fx-font-size: 86px;
+	-fx-text-fill: #33e774;
 }
 
 .textField {
