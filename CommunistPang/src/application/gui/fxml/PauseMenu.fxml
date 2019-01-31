@@ -5,7 +5,7 @@
 
 <VBox fx:id="rootPane" alignment="CENTER" fillWidth="false" onKeyPressed="#handleKeyPressed" styleClass="pauseLayout" stylesheets="@../style/app.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.gui.PauseMenu">
    <children>
-      <JFXButton onAction="#handleContinue" ripplerFill="BLACK" styleClass="commonButton" text="CONTINUE" />
+      <JFXButton onAction="#handleContinue" ripplerFill="BLACK" styleClass="commonButton" text="RESUME" />
       <JFXButton onAction="#handleGoBack" ripplerFill="BLACK" styleClass="commonButton" text="BACK TO HOME" />
       <JFXButton onAction="#handleExit" ripplerFill="BLACK" styleClass="commonButton" text="QUIT" />
    </children>

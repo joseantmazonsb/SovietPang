@@ -94,4 +94,7 @@ public class Character {
 			if (lp > 0 ) return true; //Returns true if player still has LP
 			return false;
 		}
+		public void increaseLP() {
+			lp++;
+		}
 }

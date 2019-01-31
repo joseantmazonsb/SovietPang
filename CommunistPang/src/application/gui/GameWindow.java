@@ -58,7 +58,7 @@ public class GameWindow implements Initializable {
 	private Image stalin, trotsky, stalinHit;
 	private List<Image> projectileImgs;
 	boolean playerHit; // Stores if player was hit by an enemy
-	int nFramesHit; // Number of frames we show hit character since it has been hit
+	double nFramesHit; // Number of frames we show hit character since it has been hit
 	Character player; // player
 	List<Projectile> projectiles; // projectiles
 	Set<Enemy> enemies; // enemies
@@ -226,7 +226,7 @@ public class GameWindow implements Initializable {
 				projectiles.stream().forEach(p -> {
 					p.move();
 					graphics.drawImage(p.getCurrentImg(), p.getX(), p.getY(), p.getWidth(), p.getHeight());
-					// Check collisions between projectiles and enemies
+					// Check collisions between projectiles and enemies //TODO improve
 					Set<Enemy> enemiesToRemove = new HashSet<>();
 					Set<Enemy> enemiesToAdd = new HashSet<>();
 					enemies.forEach(e -> {
@@ -313,7 +313,7 @@ public class GameWindow implements Initializable {
 					});
 				});
 				*/
-				// Check collisions between player and enemies
+				// Check collisions between player and enemies //TODO improve
 				if (playerHit && nFramesHit == 0) { // If player has been hit by enemy, but has been nFramesHit without
 													// any other hit, we show normal character
 					playerHit = false;
@@ -321,35 +321,35 @@ public class GameWindow implements Initializable {
 				enemies.forEach(e -> {
 					if (Collisions.rectangularCollision(player.getX(), player.getY(), player.getWidth(),
 							player.getHeight(), e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
-						if (!player.reduceLP()) {
-							this.stop();
-							endGame();
-						} else {
-							// Update enemy
-							e.setYCurrentMove(Movement.UP);
-							// Randomly decide if enemy goes left or right when collision
-							if (random.nextBoolean())
-								e.setXCurrentMove(Movement.LEFT);
-							else
-								e.setXCurrentMove(Movement.RIGHT);
-							// Get enemy out of player radius so it only hits the player once
-							e.setY(player.getY() - e.getHeight());
-							// Reduce player's LP in gui
-							lifepointsContainer.getChildren().clear();
-							for (int i = 0; i < player.getLp(); i++) {
-								ImageView lp = new ImageView(stalin);
-								lp.setFitWidth(30);
-								lp.setFitHeight(35);
-								lifepointsContainer.getChildren().add(lp);
+						// Update enemy
+						e.setYCurrentMove(Movement.UP);
+						// Randomly decide if enemy goes left or right when collision
+						if (random.nextBoolean()) e.setXCurrentMove(Movement.LEFT);
+						else e.setXCurrentMove(Movement.RIGHT);
+						// Get enemy out of player radius so it only hits the player once
+						e.setY(player.getY() - e.getHeight());
+						//If player doesn't have hit indicator, reduce LP (makes player immune while indicator of hit is set) 
+						if (nFramesHit == 0) {
+							if (!player.reduceLP()) {
+								endGame();
 							}
-							playerHit = true;
-							nFramesHit = Controller.N_FRAMES_SHOW_HIT_CHARACTER;
+							else {
+								// Reduce player's LP in gui
+								lifepointsContainer.getChildren().clear();
+								for (int i = 0; i < player.getLp(); i++) {
+									ImageView lp = new ImageView(stalin);
+									lp.setFitWidth(30);
+									lp.setFitHeight(35);
+									lifepointsContainer.getChildren().add(lp);
+								}
+								playerHit = true;
+								nFramesHit = Controller.N_FRAMES_SHOW_HIT_CHARACTER;
+							}
 						}
-					} else {
-						if (nFramesHit > 0)
-							nFramesHit--;
+					} 
+					else {
+						if (nFramesHit > 0) nFramesHit--;
 					}
-					;
 				});
 				if (playerHit) {
 					// Change img of player to inform of collision
@@ -434,6 +434,8 @@ public class GameWindow implements Initializable {
 	}
 
 	private void endGame() {
+		//stop animation
+		animator.stop();
 		//remove listeners of controller
 		controller.clearBooleanListeners();
 		//disable key logic

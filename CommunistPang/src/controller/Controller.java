@@ -62,7 +62,7 @@ public class Controller {
 	public static final int MIN_ENEMIES_LEVEL_10 = 4;
 	public static final int MAX_ENEMIES_LEVEL_10 = 6;
 	
-	public static final int N_FRAMES_SHOW_HIT_CHARACTER = 60;
+	public static final double N_FRAMES_SHOW_HIT_CHARACTER = 60*2;
 	
 	public static final int MAX_NUMBER_OF_REGISTERED_SCORES = 8;
 	

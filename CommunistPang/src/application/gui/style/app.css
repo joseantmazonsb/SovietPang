@@ -27,7 +27,7 @@
 }
 
 .pauseLayout {
-	-fx-background-color: #a90000;
+	-fx-background-color: black;
 	-fx-opacity: 0.8;
 }
 
@@ -43,6 +43,7 @@
 
 .topBar {
 	-fx-background-color: black;
+	-fx-opacity: 0.8;
 }
 
 /* Dialogs */
@@ -77,6 +78,7 @@
 	-fx-background-color: transparent;
 	-fx-font-size: 32px;
 	-fx-text-fill: white;
+	-fx-opacity: 1;
 }
 
 .commonButton:hover {
@@ -149,30 +151,35 @@
 	-fx-font-family: "Kalinka";
 	-fx-font-size: 32px;
 	-fx-text-fill: #ffff00;
+	-fx-opacity: 1;
 }
 
 .gameTextLittle {
 	-fx-font-family: "Kalinka";
 	-fx-font-size: 24px;
 	-fx-text-fill: #ffff00;
+	-fx-opacity: 1;
 }
 
 .gameText2 {
 	-fx-font-family: "Kalinka";
 	-fx-font-size: 32px;
 	-fx-text-fill: #f32e2e;
+	-fx-opacity: 1;
 }
 
 .gameText3 {
 	-fx-font-family: "Kalinka";
 	-fx-font-size: 86px;
 	-fx-text-fill: #f32e2e;
+	-fx-opacity: 1;
 }
 
 .gameText4 {
 	-fx-font-family: "Kalinka";
 	-fx-font-size: 86px;
 	-fx-text-fill: #33e774;
+	-fx-opacity: 1;
 }
 
 .textField {
