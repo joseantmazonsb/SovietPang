@@ -173,7 +173,7 @@ public class GameWindow implements Initializable {
 		);
 	}
 	//for pause
-	private void consumeKeysLogic() {
+	private void disableKeysLogic() {
 		controller.getWindow().getScene().setOnKeyPressed(e -> e.consume());
 		controller.getWindow().getScene().setOnKeyReleased(e -> e.consume());
 	}
@@ -219,7 +219,7 @@ public class GameWindow implements Initializable {
 				}
 				if (keysPressed.contains(KeyCode.ESCAPE)) {
 					keysPressed.remove(KeyCode.ESCAPE);
-					consumeKeysLogic();
+					disableKeysLogic();
 					controller.setPaused(true);
 				}
 				// Update projectiles
@@ -434,6 +434,10 @@ public class GameWindow implements Initializable {
 	}
 
 	private void endGame() {
+		//remove listeners of controller
+		controller.clearBooleanListeners();
+		//disable key logic
+		disableKeysLogic();
 		// register score
 		File file = new File("Highscores.txt");
 		File fileNew = new File("tmp.txt");

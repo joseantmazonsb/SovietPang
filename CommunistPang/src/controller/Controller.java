@@ -159,4 +159,7 @@ public class Controller {
 	synchronized public boolean removeBooleanListener(BooleanListener l) {
 		return booleanListeners.remove(l);
 	}
+	synchronized public void clearBooleanListeners() {
+		booleanListeners.clear();
+	}
 }
