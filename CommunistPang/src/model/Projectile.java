@@ -69,5 +69,6 @@ public class Projectile {
 	}
 	public void move() {
 		y -= vy;
+		x += vx;
 	}
 }

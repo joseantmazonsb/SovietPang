@@ -194,3 +194,12 @@
 .textField .input-focused-line{
     -fx-background-color: #f32e2e;
 }
+
+.progressBar > .track {
+  -fx-text-box-border: #f32e2e;
+  -fx-control-inner-background: #ed7171;
+}
+
+.progressBar > .bar {
+  -fx-background-color: #a90000;
+}

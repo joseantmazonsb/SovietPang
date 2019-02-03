@@ -64,6 +64,9 @@ public class Controller {
 	
 	public static final double N_FRAMES_SHOW_HIT_CHARACTER = 60*2;
 	
+	public static final double N_FRAMES_ULTI_AVAILABLE = 60;
+	public static final double SCORE_TO_ULTI = SCORE_FOR_HITTING_ENEMIES*10;
+	
 	public static final int MAX_NUMBER_OF_REGISTERED_SCORES = 8;
 	
 	//Constructor
@@ -133,8 +136,7 @@ public class Controller {
 		return new Enemy(e.getX(), e.getY(), e.getWidth(), e.getHeight(), e.getLp(), e.getImg());
 	}
 	public Projectile createProjectile(double x, double y, List<Image> imgs) {
-		return new Projectile(x, y, PROJECTILE_WIDTH, PROJECTILE_HEIGHT, imgs);
-		
+		return new Projectile(x, y, PROJECTILE_WIDTH, PROJECTILE_HEIGHT, imgs);	
 	}
 	public boolean isPaused() {
 		return paused;
