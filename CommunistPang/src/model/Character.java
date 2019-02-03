@@ -7,7 +7,6 @@ public class Character {
 	//Attributes
 		private double x, y, width, height, vx, vy; //vx and vy are the components of speed of X,Y axis respectively
 		private int lp; //Life points
-		private boolean ultiAvailable; //Ultimate skill
 		private Image img;
 		//Constructor
 		public Character(double x, double y, double width, double height, int lp, Image img) {
@@ -17,7 +16,6 @@ public class Character {
 			this.height = height;
 			this.lp = lp;
 			this.img = img;
-			ultiAvailable = false;
 			vx = Controller.CHARACTER_X_AXIS_SPEED;
 			vy = Controller.CHARACTER_Y_AXIS_SPEED;
 		}
@@ -63,12 +61,6 @@ public class Character {
 		}
 		public void setLp(int lp) {
 			this.lp = lp;
-		}
-		public boolean isUltiAvailable() {
-			return ultiAvailable;
-		}
-		public void setUltiAvailable(boolean ultiAvailable) {
-			this.ultiAvailable = ultiAvailable;
 		}
 		public Image getImg() {
 			return img;

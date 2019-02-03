@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import controller.Controller;
@@ -41,6 +42,7 @@ import model.Collisions;
 import model.Enemy;
 import model.Movement;
 import model.Projectile;
+import model.Reward;
 
 public class GameWindow implements Initializable {
 
@@ -57,13 +59,15 @@ public class GameWindow implements Initializable {
 	@FXML private ProgressBar ultiProgressBar;
 	
 	private Controller controller;
-	private Image stalin, trotsky, stalinHit, e_key;
+	private Image stalin, trotsky, stalinHit, e_key, attackReward, lpReward;
 	private List<Image> projectileImgs;
 	boolean playerHit; // Stores if player was hit by an enemy
 	double nFramesHit; // Number of frames we show hit character since it has been hit
 	Character player; // player
 	List<Projectile> projectiles; // projectiles
 	List<Projectile> ultiProjectiles; // projectiles when ulti
+	Stack<Reward> levelRewards; // rewards of level
+	List<Reward> activeRewards; //active rewards (on screen)
 	Set<Enemy> enemies; // enemies
 	Set<KeyCode> keysPressed; // keys currently pressed
 	Random random; // random generator
@@ -72,6 +76,7 @@ public class GameWindow implements Initializable {
 	double ultiScore; //stores remaining score to be able to use ulti
 	boolean usingUlti; //whether user is using ulti
 	double framesUlti; //remaining frames of ulti
+	double framesNextReward; //remaining frames to next reward
 
 	public GameWindow() {
 		controller = Controller.getInstance();
@@ -92,6 +97,10 @@ public class GameWindow implements Initializable {
 				getClass().getClassLoader().getResource("application/resources/bullet4.png").toExternalForm()));
 		e_key = new Image(
 				getClass().getClassLoader().getResource("application/resources/key_e.png").toExternalForm());
+		attackReward = new Image(
+				getClass().getClassLoader().getResource("application/resources/attackReward.png").toExternalForm());
+		lpReward = new Image(
+				getClass().getClassLoader().getResource("application/resources/lpReward.png").toExternalForm());
 		playerHit = false;
 		nFramesHit = 0;
 		player = controller.createCharacter(0, 0, stalin);
@@ -99,10 +108,13 @@ public class GameWindow implements Initializable {
 		ultiProjectiles = new LinkedList<>();
 		keysPressed = new HashSet<>();
 		enemies = new HashSet<>();
+		levelRewards = new Stack<>();
+		activeRewards = new LinkedList<>();
 		random = new Random(Calendar.getInstance().getTimeInMillis());
 		ultiScore = 0;
 		framesUlti = Controller.N_FRAMES_ULTI_AVAILABLE;
 		usingUlti = false;
+		framesNextReward = Controller.N_FRAMES_NEXT_REWARD;
 	}
 
 	@Override
@@ -132,9 +144,9 @@ public class GameWindow implements Initializable {
 		});
 
 		for (int i = 0; i < Controller.CHARACTER_LP; i++) {
-			ImageView lp = new ImageView(stalin);
+			ImageView lp = new ImageView(lpReward);
 			lp.setFitWidth(30);
-			lp.setFitHeight(35);
+			lp.setFitHeight(30);
 			lifepointsContainer.getChildren().add(lp);
 		}
 
@@ -211,9 +223,9 @@ public class GameWindow implements Initializable {
 					controller.increaseScore();
 					score.setText(Integer.toString(controller.getCurrentScore()));
 					
-					if (!ultiProjectiles.contains(p)) {
+					if (!ultiProjectiles.contains(p)) { //make ulti projectiles don't count to get ulti again
 						ultiScore += Controller.SCORE_FOR_HITTING_ENEMIES;
-						ultiProgressBar.setProgress(ultiProgressBar.getProgress() + 0.1);
+						ultiProgressBar.setProgress(ultiProgressBar.getProgress() + Controller.SCORE_FOR_HITTING_ENEMIES/Controller.SCORE_TO_ULTI);
 					}
 					// Add projectile to remove list
 					projectilesToRemove.add(p);
@@ -252,13 +264,8 @@ public class GameWindow implements Initializable {
 	
 	private void updatePlayer() {
 		
-		if (player.isUltiAvailable()) {
+		if (ultiProgressBar.getProgress() >= 0.999) {
 			graphics.drawImage(e_key, 100, 100, 100, 100);
-		}
-		
-		if (ultiScore == Controller.SCORE_TO_ULTI) {
-			ultiScore = 0;
-			player.setUltiAvailable(true);
 		}
 		
 		if (usingUlti) {
@@ -292,10 +299,10 @@ public class GameWindow implements Initializable {
 			keysPressed.remove(KeyCode.SPACE); // no shooting when holding down space bar
 		}
 		if (keysPressed.contains(KeyCode.E)) {
-			if (player.isUltiAvailable()) {
-				player.setUltiAvailable(false);
-				usingUlti = true;
+			if (ultiProgressBar.getProgress() >= 0.999) {
+				ultiScore = 0;
 				ultiProgressBar.setProgress(0);
+				usingUlti = true;
 			}
 		}
 		if (keysPressed.contains(KeyCode.ESCAPE)) {
@@ -303,6 +310,7 @@ public class GameWindow implements Initializable {
 			disableKeysLogic();
 			controller.setPaused(true);
 		}
+		
 	}
 	
 	private void updateEnemies() {
@@ -348,7 +356,56 @@ public class GameWindow implements Initializable {
 		});
 	}
 	
+	private void updateRewards() {
+		if (framesNextReward > 0) {
+			framesNextReward--;
+		}
+		else {
+			//add new reward
+			framesNextReward = Controller.N_FRAMES_NEXT_REWARD;
+			if (!levelRewards.isEmpty()) activeRewards.add(levelRewards.pop());
+			
+		}
+		//update rewards
+		activeRewards.forEach(r -> {
+			if (r.getY() + r.getHeight() < canvas.getHeight()) r.move();
+			//else r.setY(0);
+			graphics.drawImage(r.getImg(), r.getX(), r.getY(), r.getWidth(), r.getHeight());
+		});
+		
+	}
+	
 	private void handleCollisions() {
+		
+		//Check collisions between player and rewards
+		List<Reward> rewardsToRemove = new LinkedList<>();
+		activeRewards.forEach(r -> {
+			if (Collisions.rectangularCollision(r.getX(), r.getY(), r.getWidth(), r.getHeight(), player.getX(), player.getY(), player.getWidth(), player.getWidth())) {
+				rewardsToRemove.add(r);
+				switch (r.getType()) {
+					case LP:
+						// Increase player's LP
+						player.increaseLP();
+						// Increase player's LP in gui
+						lifepointsContainer.getChildren().clear();
+						for (int i = 0; i < player.getLp(); i++) {
+							ImageView lp = new ImageView(lpReward);
+							lp.setFitWidth(30);
+							lp.setFitHeight(30);
+							lifepointsContainer.getChildren().add(lp);
+						}
+						break;
+					case ATTACK:
+						//TODO define behaviour
+						break;
+					default:
+						break;
+				}
+			}
+		});
+		//remove hit rewards
+		rewardsToRemove.forEach(r -> activeRewards.remove(r));
+		
 		// Check collisions between enemies TODO improve
 		/*
 		enemies.forEach(e1 -> {
@@ -384,13 +441,15 @@ public class GameWindow implements Initializable {
 						// Reduce player's LP in gui
 						lifepointsContainer.getChildren().clear();
 						for (int i = 0; i < player.getLp(); i++) {
-							ImageView lp = new ImageView(stalin);
+							ImageView lp = new ImageView(lpReward);
 							lp.setFitWidth(30);
-							lp.setFitHeight(35);
+							lp.setFitHeight(30);
 							lifepointsContainer.getChildren().add(lp);
 						}
 						playerHit = true;
 						nFramesHit = Controller.N_FRAMES_SHOW_HIT_CHARACTER;
+						//reduce cooldown of next reward
+						framesNextReward -= 60; //1 sec
 					}
 				}
 			} 
@@ -415,9 +474,13 @@ public class GameWindow implements Initializable {
 				// Player won the game
 				endGame();
 			} else {
+				//new seed for random generator
+				random.setSeed(Calendar.getInstance().getTimeInMillis());
 				//clear projectiles on screen
 				projectiles.clear();
 				ultiProjectiles.clear();
+				//clear rewards list of previous level
+				levelRewards.clear();
 				//set next level text
 				level.setText(Integer.toString(controller.getCurrentLevel()));
 				// Next level enemies
@@ -430,6 +493,9 @@ public class GameWindow implements Initializable {
 				double previousY = 1;
 				int n_enemies = 0;
 				// Things to do
+				if (controller.getCurrentLevel() == 1) {
+					n_enemies = Controller.ENEMIES_LEVEL_1;
+				}
 				if (controller.getCurrentLevel() >= 2 && controller.getCurrentLevel() <= 3) {
 					n_enemies = random
 							.nextInt(Controller.MAX_ENEMIES_LEVEL_2_3 - Controller.MIN_ENEMIES_LEVEL_2_3)
@@ -467,6 +533,7 @@ public class GameWindow implements Initializable {
 					y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT
 							- controller.getCurrentPlayer().getHeight() * 5));
 				}
+				//Add enemies
 				for (int i = 0; i < n_enemies; i++) {
 					enemies.add(controller.createEnemy(
 							(previousX * x) % (canvas.getWidth() - Controller.ENEMY_WIDTH),
@@ -479,6 +546,16 @@ public class GameWindow implements Initializable {
 					y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT
 							- controller.getCurrentPlayer().getHeight() * 5));
 				}
+				//add rewards
+				int n_rewards = random.nextInt(n_enemies) + 1;
+				for (int i = 0; i < n_rewards; i++) {
+					if (random.nextBoolean()) {
+						levelRewards.add(controller.createAttackReward(random.nextInt((int) (canvas.getWidth() - Controller.REWARD_WIDTH)), 0, attackReward));
+					}
+					else {
+						levelRewards.add(controller.createLPReward(random.nextInt((int) (canvas.getWidth() - Controller.REWARD_WIDTH)), 0, lpReward));
+					}
+				}
 			}
 		}
 	}
@@ -489,17 +566,6 @@ public class GameWindow implements Initializable {
 		player.setY(canvas.getHeight() - Controller.CHARACTER_HEIGHT);
 		//Set keys logic
 		setKeysLogic();
-		// We start level 1 with 2 enemies that spawn randomly
-		double x = random.nextInt((int) (canvas.getWidth() - Controller.ENEMY_WIDTH));
-		double y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight() * 5));
-		enemies.add(controller.createEnemy(x, y, trotsky));
-		random.setSeed(Calendar.getInstance().getTimeInMillis());
-		double previousX = x;
-		double previousY = y;
-		x = random.nextInt((int) (canvas.getWidth() - Controller.ENEMY_WIDTH));
-		y = random.nextInt((int) (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight() * 5));
-		enemies.add(controller.createEnemy((previousX * x) % (canvas.getWidth() - Controller.ENEMY_WIDTH),
-				(previousY * y) % (canvas.getHeight() - Controller.ENEMY_HEIGHT - player.getHeight() * 5), trotsky));
 		// set animator
 		animator = new AnimationTimer() {
 
@@ -508,16 +574,18 @@ public class GameWindow implements Initializable {
 				setKeysLogic(); //TODO no idea why but works for pause
 				// Clear screen
 				graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-				// Update player
-				updatePlayer();
+				// Update level
+				updateLevel();
+				// Update rewards
+				updateRewards();
 				// Update projectiles
 				updateProjectiles();
 				// Update enemies
 				updateEnemies();
-				//Check and handle collisions between player and enemies and between enemies and other enemies
+				// Update player
+				updatePlayer();
+				// Check and handle collisions between player and enemies and between enemies and other enemies
 				handleCollisions();
-				//Update level
-				updateLevel();
 			}
 		};
 		// start

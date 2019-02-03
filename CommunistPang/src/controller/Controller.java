@@ -10,6 +10,8 @@ import listeners.BooleanListener;
 import model.Character;
 import model.Enemy;
 import model.Projectile;
+import model.Reward;
+import model.RewardType;
 
 public class Controller {
 	//Attributes
@@ -42,10 +44,19 @@ public class Controller {
 	public static final double PROJECTILE_X_AXIS_SPEED = 0;
 	public static final double PROJECTILE_Y_AXIS_SPEED = 25;
 	
-	public static final int REWARDS_BONUS = 150;
+	public static final double REWARD_WIDTH = 30;
+	public static final double REWARD_HEIGHT = 30;
+	public static final double REWARD_X_AXIS_SPEED = 0;
+	public static final double REWARD_Y_AXIS_SPEED = 10;
+	public static final int REWARD_LP_BONUS = 1;
+	public static final int REWARD_SCORE_BONUS = 150;
+	public static final int REWARD_ATTACK_BONUS = 1;
+	
 	public static final int SCORE_FOR_HITTING_ENEMIES = 100;
 	
 	public static final int MAX_LEVELS = 10;
+	
+	public static final int ENEMIES_LEVEL_1 = 2;
 	
 	public static final int MIN_ENEMIES_LEVEL_2_3 = 2;
 	public static final int MAX_ENEMIES_LEVEL_2_3 = 4;
@@ -62,17 +73,19 @@ public class Controller {
 	public static final int MIN_ENEMIES_LEVEL_10 = 4;
 	public static final int MAX_ENEMIES_LEVEL_10 = 6;
 	
-	public static final double N_FRAMES_SHOW_HIT_CHARACTER = 60*2;
+	public static final double N_FRAMES_SHOW_HIT_CHARACTER = 60*3;
 	
 	public static final double N_FRAMES_ULTI_AVAILABLE = 60;
 	public static final double SCORE_TO_ULTI = SCORE_FOR_HITTING_ENEMIES*10;
+	
+	public static final double N_FRAMES_NEXT_REWARD = 60*15;
 	
 	public static final int MAX_NUMBER_OF_REGISTERED_SCORES = 8;
 	
 	//Constructor
 	public Controller() {
 		currentScore = 0;
-		currentLevel = 1;
+		currentLevel = 0;
 		paused = false;
 		booleanListeners = new LinkedList<>();
 	}
@@ -137,6 +150,12 @@ public class Controller {
 	}
 	public Projectile createProjectile(double x, double y, List<Image> imgs) {
 		return new Projectile(x, y, PROJECTILE_WIDTH, PROJECTILE_HEIGHT, imgs);	
+	}
+	public Reward createLPReward(double x, double y, Image img) {
+		return new Reward(x, y, REWARD_WIDTH, REWARD_HEIGHT, REWARD_X_AXIS_SPEED, REWARD_Y_AXIS_SPEED, RewardType.LP, img);
+	}
+	public Reward createAttackReward(double x, double y, Image img) {
+		return new Reward(x, y, REWARD_WIDTH, REWARD_HEIGHT, REWARD_X_AXIS_SPEED, REWARD_Y_AXIS_SPEED, RewardType.ATTACK, img);
 	}
 	public boolean isPaused() {
 		return paused;

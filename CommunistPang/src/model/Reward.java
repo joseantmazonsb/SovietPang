@@ -1,20 +1,21 @@
 package model;
 
-import controller.Controller;
 import javafx.scene.image.Image;
 
 public class Reward {
 	//Attributes
-		private double x, y, width, height;
-		private int bonus; //Bonus points
+		private double x, y, width, height, vx, vy;
+		private RewardType type;
 		private Image img;
 		//Constructor
-		public Reward(double x, double y, double width, double height, Image img) {
+		public Reward(double x, double y, double width, double height, double vx, double vy, RewardType type , Image img) {
 			this.x = x;
 			this.y = y;
 			this.width = width;
 			this.height = height;
-			this.bonus = Controller.REWARDS_BONUS;
+			this.vx = vx;
+			this.vy = vy;
+			this.type = type;
 			this.img = img;
 		}
 		//Getters & setters
@@ -42,17 +43,33 @@ public class Reward {
 		public void setHeight(double height) {
 			this.height = height;
 		}
-		public int getBonus() {
-			return bonus;
+		public double getVx() {
+			return vx;
 		}
-		public void setBonus(int bonus) {
-			this.bonus = bonus;
+		public void setVx(double vx) {
+			this.vx = vx;
+		}
+		public double getVy() {
+			return vy;
+		}
+		public void setVy(double vy) {
+			this.vy = vy;
+		}
+		public RewardType getType() {
+			return type;
+		}
+		public void setType(RewardType type) {
+			this.type = type;
 		}
 		public Image getImg() {
 			return img;
 		}
 		public void setImg(Image img) {
 			this.img = img;
+		}
+		//Methods
+		public void move() {
+			y += vy;
 		}
 		
 }
