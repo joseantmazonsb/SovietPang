@@ -10,7 +10,7 @@
    <center>
       <VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="score" alignment="TOP_CENTER" styleClass="gameText" text="YOUR SCORE: ">
+            <Label fx:id="score" alignment="TOP_CENTER" styleClass="gameText" text="OUR SCORE: ">
                <padding>
                   <Insets bottom="50.0" />
                </padding>
@@ -22,7 +22,7 @@
       </VBox>
    </center>
    <top>
-      <Label alignment="TOP_CENTER" styleClass="gameText4" text="YOU WIN" BorderPane.alignment="CENTER">
+      <Label alignment="TOP_CENTER" styleClass="gameText4" text="WE WIN" BorderPane.alignment="CENTER">
          <padding>
             <Insets top="50.0" />
          </padding>

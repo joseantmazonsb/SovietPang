@@ -75,8 +75,8 @@ public class Controller {
 	
 	public static final double N_FRAMES_SHOW_HIT_CHARACTER = 60*3;
 	
-	public static final double N_FRAMES_ULTI_AVAILABLE = 60;
-	public static final double SCORE_TO_ULTI = SCORE_FOR_HITTING_ENEMIES*15;
+	public static final double N_FRAMES_ULTI_AVAILABLE = 30;
+	public static final double SCORE_TO_ULTI = SCORE_FOR_HITTING_ENEMIES*20;
 	
 	public static final double N_FRAMES_NEXT_REWARD = 60*15;
 	
