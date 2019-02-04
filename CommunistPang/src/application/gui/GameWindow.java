@@ -64,6 +64,7 @@ public class GameWindow implements Initializable {
 	boolean playerHit; // Stores if player was hit by an enemy
 	double nFramesHit; // Number of frames we show hit character since it has been hit
 	Character player; // player
+	int n_projectiles; //number of simultaneous projectiles the player can throw
 	List<Projectile> projectiles; // projectiles
 	List<Projectile> ultiProjectiles; // projectiles when ulti
 	Stack<Reward> levelRewards; // rewards of level
@@ -115,6 +116,7 @@ public class GameWindow implements Initializable {
 		framesUlti = Controller.N_FRAMES_ULTI_AVAILABLE;
 		usingUlti = false;
 		framesNextReward = Controller.N_FRAMES_NEXT_REWARD;
+		n_projectiles = 1;
 	}
 
 	@Override
@@ -294,9 +296,21 @@ public class GameWindow implements Initializable {
 		if (keysPressed.contains(KeyCode.LEFT) && player.getX() - player.getVx() > 0 - player.getWidth() / 2.6)
 			player.moveLeft();
 		if (keysPressed.contains(KeyCode.SPACE)) {
-			projectiles.add(controller.createProjectile(player.getX() + player.getWidth() / 3, player.getY(),
-					projectileImgs));
 			keysPressed.remove(KeyCode.SPACE); // no shooting when holding down space bar
+			switch (n_projectiles) {
+				case 1:
+					projectiles.add(controller.createProjectile(player.getX() + player.getWidth() / 3, player.getY(),
+							projectileImgs));
+					break;
+				case 2:
+					projectiles.add(controller.createProjectile(player.getX(), player.getY(),
+							projectileImgs));
+					projectiles.add(controller.createProjectile(player.getX() + player.getWidth()/1.5, player.getY(),
+							projectileImgs));
+					break;
+				default:
+					break;
+			}
 		}
 		if (keysPressed.contains(KeyCode.E)) {
 			if (ultiProgressBar.getProgress() >= 0.999) {
@@ -396,7 +410,11 @@ public class GameWindow implements Initializable {
 						}
 						break;
 					case ATTACK:
-						//TODO define behaviour
+						if (n_projectiles < 2) n_projectiles++;
+						else {
+							controller.increaseScore();
+							score.setText(Integer.toString(controller.getCurrentScore()));
+						}
 						break;
 					default:
 						break;
@@ -434,22 +452,25 @@ public class GameWindow implements Initializable {
 				e.setY(player.getY() - e.getHeight());
 				//If player doesn't have hit indicator, reduce LP (makes player immune while indicator of hit is set) 
 				if (nFramesHit == 0) {
-					if (!player.reduceLP()) {
-						endGame();
-					}
+					if (n_projectiles > 1) n_projectiles--;
 					else {
-						// Reduce player's LP in gui
-						lifepointsContainer.getChildren().clear();
-						for (int i = 0; i < player.getLp(); i++) {
-							ImageView lp = new ImageView(lpReward);
-							lp.setFitWidth(30);
-							lp.setFitHeight(30);
-							lifepointsContainer.getChildren().add(lp);
+						if (!player.reduceLP()) {
+							endGame();
 						}
-						playerHit = true;
-						nFramesHit = Controller.N_FRAMES_SHOW_HIT_CHARACTER;
-						//reduce cooldown of next reward
-						framesNextReward -= 60; //1 sec
+						else {
+							// Reduce player's LP in gui
+							lifepointsContainer.getChildren().clear();
+							for (int i = 0; i < player.getLp(); i++) {
+								ImageView lp = new ImageView(lpReward);
+								lp.setFitWidth(30);
+								lp.setFitHeight(30);
+								lifepointsContainer.getChildren().add(lp);
+							}
+							playerHit = true;
+							nFramesHit = Controller.N_FRAMES_SHOW_HIT_CHARACTER;
+							//reduce cooldown of next reward
+							framesNextReward -= 60; //1 sec
+						}
 					}
 				}
 			} 
